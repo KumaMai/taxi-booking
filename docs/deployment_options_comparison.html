@@ -1,0 +1,166 @@
+
+<style>
+.wrap { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+.panel { border:0.5px solid var(--color-border-tertiary); border-radius:var(--border-radius-lg); overflow:hidden; }
+.panel-head { padding:14px 16px 10px; border-bottom:0.5px solid var(--color-border-tertiary); }
+.panel-head h3 { margin:0 0 2px; font-size:15px; font-weight:500; }
+.panel-head p { margin:0; font-size:12px; color:var(--color-text-secondary); }
+.badge { display:inline-block; font-size:11px; padding:2px 8px; border-radius:20px; margin-bottom:6px; }
+.badge-a { background:var(--color-background-info); color:var(--color-text-info); }
+.badge-b { background:var(--color-background-success); color:var(--color-text-success); }
+.step-list { padding:12px 16px; }
+.step { display:flex; gap:10px; align-items:flex-start; margin-bottom:12px; }
+.step-num { min-width:22px; height:22px; border-radius:50%; background:var(--color-background-secondary); border:0.5px solid var(--color-border-secondary); display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:500; color:var(--color-text-secondary); }
+.step-body { font-size:13px; line-height:1.5; }
+.step-body strong { font-weight:500; color:var(--color-text-primary); }
+.step-body small { font-size:11px; color:var(--color-text-tertiary); display:block; margin-top:1px; }
+.step-body code { font-family:var(--font-mono); font-size:11px; background:var(--color-background-secondary); padding:1px 5px; border-radius:4px; }
+.divider { border:none; border-top:0.5px solid var(--color-border-tertiary); margin:0; }
+.pros-cons { padding:10px 16px; display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+.pros, .cons { font-size:12px; }
+.pros-title { color:var(--color-text-success); font-weight:500; margin-bottom:4px; font-size:12px; }
+.cons-title { color:var(--color-text-danger); font-weight:500; margin-bottom:4px; font-size:12px; }
+.pros li, .cons li { color:var(--color-text-secondary); margin-bottom:3px; padding-left:12px; position:relative; list-style:none; }
+.pros li::before { content:"✓"; position:absolute; left:0; color:var(--color-text-success); font-size:10px; }
+.cons li::before { content:"✗"; position:absolute; left:0; color:var(--color-text-danger); font-size:10px; }
+</style>
+
+<h2 class="sr-only">Comparison of deployment options A and B for Next.js taxi booking system</h2>
+
+<div class="wrap">
+  <!-- OPTION A -->
+  <div class="panel">
+    <div class="panel-head">
+      <span class="badge badge-a">Option A</span>
+      <h3>Vercel + Neon PostgreSQL</h3>
+      <p>Zero-infrastructure, fully managed cloud</p>
+    </div>
+    <div class="step-list">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body"><strong>สร้าง repo บน GitHub</strong><br>push code ขึ้น GitHub ปกติ<small>branch: main = production, dev = staging</small></div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body"><strong>สมัคร Neon (neon.tech)</strong><br>สร้าง PostgreSQL database ออนไลน์<small>ได้ connection string เช่น <code>postgresql://user:pass@ep-xxx.neon.tech/taxi</code></small></div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body"><strong>สมัคร Vercel (vercel.com)</strong><br>กด "Import GitHub Repository"<small>Vercel อ่าน Next.js project ได้อัตโนมัติ ไม่ต้อง config</small></div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-body"><strong>ตั้ง Environment Variables</strong><br>ใส่ใน Vercel Dashboard<small><code>DATABASE_URL</code>, <code>NEXTAUTH_SECRET</code>, <code>EMAIL_PASS</code></small></div>
+      </div>
+      <div class="step">
+        <div class="step-num">5</div>
+        <div class="step-body"><strong>Run Prisma Migration</strong><br><code>npx prisma db push</code> ครั้งแรก<small>Prisma สร้าง table ให้อัตโนมัติจาก schema.prisma</small></div>
+      </div>
+      <div class="step">
+        <div class="step-num">6</div>
+        <div class="step-body"><strong>ผูก Custom Domain</strong><br>ชี้ DNS ที่ domain registrar → Vercel<small>SSL cert ออกอัตโนมัติ ไม่ต้องทำอะไรเพิ่ม</small></div>
+      </div>
+      <div class="step">
+        <div class="step-num">7</div>
+        <div class="step-body"><strong>Deploy อัตโนมัติทุก push</strong><br><code>git push origin main</code> → live ใน ~2 นาที<small>Preview URL ทุก branch/PR โดยอัตโนมัติ</small></div>
+      </div>
+    </div>
+    <hr class="divider">
+    <div class="pros-cons">
+      <div class="pros">
+        <div class="pros-title">ข้อดี</div>
+        <ul>
+          <li>ไม่ต้องดูแล server เลย</li>
+          <li>SSL อัตโนมัติ</li>
+          <li>Global CDN ทั่วโลก</li>
+          <li>Auto-scale ตาม traffic</li>
+          <li>Preview deploy ทุก branch</li>
+          <li>Neon backup อัตโนมัติ</li>
+          <li>Uptime 99.99% SLA</li>
+        </ul>
+      </div>
+      <div class="cons">
+        <div class="cons-title">ข้อเสีย</div>
+        <ul>
+          <li>Vendor lock-in (Vercel)</li>
+          <li>Neon cold start ~500ms</li>
+          <li>ค่าใช้จ่ายเพิ่มตาม traffic</li>
+          <li>API route timeout 10-30s</li>
+          <li>ไม่ control server ได้</li>
+          <li>Background jobs ทำยาก</li>
+        </ul>
+      </div>
+    </div>
+    <div style="padding:8px 16px 12px; border-top:0.5px solid var(--color-border-tertiary);">
+      <p style="font-size:12px; color:var(--color-text-secondary); margin:0;">💰 ค่าใช้จ่าย: <strong style="color:var(--color-text-primary)">$0/เดือน</strong> (Hobby) → <strong style="color:var(--color-text-primary)">$20/เดือน</strong> (Pro) + Neon Free tier</p>
+    </div>
+  </div>
+
+  <!-- OPTION B -->
+  <div class="panel">
+    <div class="panel-head">
+      <span class="badge badge-b">Option B</span>
+      <h3>Docker Compose + VPS (Production)</h3>
+      <p>Self-hosted, full control, GitHub Actions CI/CD</p>
+    </div>
+    <div class="step-list">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body"><strong>เช่า VPS</strong> (DigitalOcean / Vultr / Hetzner)<br>Ubuntu 22.04 LTS, 2GB RAM แนะนำ<small>$6-12/เดือน — ติดตั้ง Docker + Docker Compose</small></div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body"><strong>เขียน Dockerfile + docker-compose.prod.yml</strong><br>Next.js app + PostgreSQL + Nginx<small>Nginx ทำหน้า reverse proxy + SSL termination</small></div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body"><strong>ตั้ง SSL ด้วย Let's Encrypt + Certbot</strong><br><code>certbot --nginx -d yourdomain.com</code><small>ฟรี ต่ออายุอัตโนมัติทุก 90 วัน</small></div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-body"><strong>ตั้ง GitHub Actions CI/CD</strong><br>push → build Docker image → SSH deploy<small>.github/workflows/deploy.yml จัดการทั้งหมด</small></div>
+      </div>
+      <div class="step">
+        <div class="step-num">5</div>
+        <div class="step-body"><strong>ตั้ง Backup อัตโนมัติ</strong><br>cron job dump PostgreSQL ทุกคืน<small><code>pg_dump</code> → upload S3 / Backblaze B2</small></div>
+      </div>
+      <div class="step">
+        <div class="step-num">6</div>
+        <div class="step-body"><strong>ตั้ง Monitoring</strong><br>UptimeRobot (ฟรี) แจ้งเตือนถ้า site down<small>+ Docker restart policy: <code>unless-stopped</code></small></div>
+      </div>
+      <div class="step">
+        <div class="step-num">7</div>
+        <div class="step-body"><strong>Deploy ครั้งแรก</strong><br><code>docker compose up -d</code> บน VPS<small>ครั้งถัดไป push code → GitHub Actions deploy อัตโนมัติ</small></div>
+      </div>
+    </div>
+    <hr class="divider">
+    <div class="pros-cons">
+      <div class="pros">
+        <div class="pros-title">ข้อดี</div>
+        <ul>
+          <li>ควบคุมได้ 100%</li>
+          <li>ไม่มี vendor lock-in</li>
+          <li>ราคาคงที่ ไม่เพิ่มตาม traffic</li>
+          <li>ไม่มี cold start</li>
+          <li>Background jobs ได้ปกติ</li>
+          <li>ข้อมูลอยู่บน server ตัวเอง</li>
+          <li>Upgrade ทำเมื่อไรก็ได้</li>
+        </ul>
+      </div>
+      <div class="cons">
+        <div class="cons-title">ข้อเสีย</div>
+        <ul>
+          <li>ต้อง setup เองทั้งหมด</li>
+          <li>ต้อง patch OS เอง</li>
+          <li>Backup ต้องตั้งเอง</li>
+          <li>Scale ได้ยากถ้า traffic พุ่ง</li>
+          <li>ถ้า VPS down = site down</li>
+          <li>ต้องใช้เวลา setup ~4-6h</li>
+        </ul>
+      </div>
+    </div>
+    <div style="padding:8px 16px 12px; border-top:0.5px solid var(--color-border-tertiary);">
+      <p style="font-size:12px; color:var(--color-text-secondary); margin:0;">💰 ค่าใช้จ่าย: <strong style="color:var(--color-text-primary)">$6/เดือน</strong> (1GB) → <strong style="color:var(--color-text-primary)">$12/เดือน</strong> (2GB RAM) คงที่ตลอด</p>
+    </div>
+  </div>
+</div>
