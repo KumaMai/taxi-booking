@@ -5,3 +5,198 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
+// ─── ENUMS ────────────────────────────────────────────────────
+
+enum VehicleType {
+  SEDAN
+  SUV
+  VAN
+}
+
+enum PickupType {
+  AIRPORT
+  HOTEL
+  OTHER
+}
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  COMPLETED
+  CANCELLED
+}
+
+enum ContactChannel {
+  WHATSAPP
+  LINE
+  WECHAT
+  EMAIL
+}
+
+enum BookingSource {
+  WEBSITE
+  WHATSAPP
+  LINE
+  PHONE
+  FACEBOOK
+  WECHAT
+}
+
+enum ReviewSource {
+  TRIPADVISOR
+  GOOGLE
+  FACEBOOK
+  DIRECT
+}
+
+enum AdminRole {
+  SUPER_ADMIN
+  ADMIN
+}
+
+// ─── TABLE 1: bookings ────────────────────────────────────────
+
+model Booking {
+  bookingsId      Int            @id @default(autoincrement()) @map("bookings_id")
+  bookingRef      String         @unique @default(cuid()) @map("booking_ref")
+  fullName        String         @map("full_name")
+  phoneCountry    String         @default("+66") @map("phone_country")
+  phone           String
+  email           String?
+  adultPassengers Int            @default(1) @map("adult_passengers")
+  childPassengers Int            @default(0) @map("child_passengers")
+  pickupDate      DateTime       @map("pickup_date")
+  pickupTime      String         @map("pickup_time")
+  vehicleType     VehicleType    @map("vehicle_type")
+  pickupType      PickupType     @map("pickup_type")
+  pickupDetail    String?        @map("pickup_detail")
+  dropoffLocation String         @map("dropoff_location")
+  mapsLink        String?        @map("maps_link")
+  contactChannel  ContactChannel @map("contact_channel")
+  contactInfo     String         @map("contact_info")
+  notes           String?
+  status          BookingStatus  @default(PENDING)
+  source          BookingSource  @default(WEBSITE)
+  createdAt       DateTime       @default(now()) @map("created_at")
+  updatedAt       DateTime       @updatedAt @map("updated_at")
+
+  @@map("bookings")
+}
+
+// ─── TABLE 2: price_zones ─────────────────────────────────────
+
+model PriceZone {
+  priceZonesId Int          @id @default(autoincrement()) @map("price_zones_id")
+  nameEn       String       @map("name_en")
+  nameTh       String       @map("name_th")
+  sortOrder    Int          @default(0) @map("sort_order")
+  isActive     Boolean      @default(true) @map("is_active")
+  routes       PriceRoute[]
+
+  @@map("price_zones")
+}
+
+// ─── TABLE 3: price_routes ────────────────────────────────────
+
+model PriceRoute {
+  priceRoutesId Int       @id @default(autoincrement()) @map("price_routes_id")
+  zone          PriceZone @relation(fields: [zoneId], references: [priceZonesId])
+  zoneId        Int       @map("zone_id")
+  fromEn        String    @map("from_en")
+  fromTh        String    @map("from_th")
+  toEn          String    @map("to_en")
+  toTh          String    @map("to_th")
+  priceStandard Int       @map("price_standard")
+  priceSuv      Int       @map("price_suv")
+  priceVan      Int       @map("price_van")
+  sortOrder     Int       @default(0) @map("sort_order")
+  isActive      Boolean   @default(true) @map("is_active")
+
+  @@map("price_routes")
+}
+
+// ─── TABLE 4: reviews ─────────────────────────────────────────
+
+model Review {
+  reviewsId    Int          @id @default(autoincrement()) @map("reviews_id")
+  reviewerName String       @map("reviewer_name")
+  reviewText   String       @map("review_text")
+  rating       Int          @default(5)
+  source       ReviewSource @default(DIRECT)
+  photoUrl     String?      @map("photo_url")
+  isActive     Boolean      @default(true) @map("is_active")
+  createdAt    DateTime     @default(now()) @map("created_at")
+
+  @@map("reviews")
+}
+
+// ─── TABLE 5: faq_categories ──────────────────────────────────
+
+model FaqCategory {
+  faqCategoriesId Int     @id @default(autoincrement()) @map("faq_categories_id")
+  nameEn          String  @map("name_en")
+  nameTh          String  @map("name_th")
+  sortOrder       Int     @default(0) @map("sort_order")
+  isActive        Boolean @default(true) @map("is_active")
+  faqs            Faq[]
+
+  @@map("faq_categories")
+}
+
+// ─── TABLE 6: faqs ────────────────────────────────────────────
+
+model Faq {
+  faqsId     Int         @id @default(autoincrement()) @map("faqs_id")
+  category   FaqCategory @relation(fields: [categoryId], references: [faqCategoriesId])
+  categoryId Int         @map("category_id")
+  questionEn String      @map("question_en")
+  questionTh String      @map("question_th")
+  answerEn   String      @map("answer_en")
+  answerTh   String      @map("answer_th")
+  sortOrder  Int         @default(0) @map("sort_order")
+  isActive   Boolean     @default(true) @map("is_active")
+
+  @@map("faqs")
+}
+
+// ─── TABLE 7: attractions ─────────────────────────────────────
+
+model Attraction {
+  attractionsId Int     @id @default(autoincrement()) @map("attractions_id")
+  nameEn        String  @map("name_en")
+  nameTh        String  @map("name_th")
+  descriptionEn String  @map("description_en")
+  descriptionTh String  @map("description_th")
+  imageUrl      String? @map("image_url")
+  sortOrder     Int     @default(0) @map("sort_order")
+  isActive      Boolean @default(true) @map("is_active")
+
+  @@map("attractions")
+}
+
+// ─── TABLE 8: admin_users ─────────────────────────────────────
+
+model AdminUser {
+  adminUsersId Int       @id @default(autoincrement()) @map("admin_users_id")
+  email        String    @unique
+  passwordHash String    @map("password_hash")
+  name         String
+  role         AdminRole @default(ADMIN)
+  lastLoginAt  DateTime? @map("last_login_at")
+  createdAt    DateTime  @default(now()) @map("created_at")
+
+  @@map("admin_users")
+}
+
+// ─── TABLE 9: settings ────────────────────────────────────────
+
+model Setting {
+  settingsId  Int      @id @default(autoincrement()) @map("settings_id")
+  key         String   @unique
+  value       String
+  description String?
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@map("settings")
+}
