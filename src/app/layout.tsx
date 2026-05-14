@@ -13,9 +13,12 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Time Taxi Khaolak | Private Transfers",
+  title: {
+    default: "Time Taxi Khaolak | Private Transfers",
+    template: "%s | Time Taxi Khaolak",
+  },
   description:
-    "Private Taxi & Airport Transfers in Khao Lak and Phuket. Reliable, English-speaking drivers.",
+    "Private Taxi & Airport Transfers in Khao Lak and Phuket. Pay after trip — no deposit required. 24/7 service.",
 };
 
 export default function RootLayout({
