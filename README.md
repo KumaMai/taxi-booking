@@ -199,7 +199,7 @@ ADMIN_PASSWORD="your-admin-password"
 | `/reviews`    | SSR       | ✅ Done    |
 | `/travel`     | SSG       | ✅ Done    |
 | `/contact`    | Static    | ✅ Done    |
-| `/booking`    | Client    | ⏳ Phase 4 |
+| `/booking`    | Client    | ✅ Done    |
 | `/admin/*`    | Protected | ⏳ Phase 5 |
 
 ## 📋 Development Roadmap
@@ -208,7 +208,7 @@ ADMIN_PASSWORD="your-admin-password"
 - [x] Phase 1 — Next.js Project + Docker + Tailwind + Prisma
 - [x] Phase 2 — Database Schema (9 Tables) + Seed Data
 - [x] Phase 3 — Public Pages (7 pages)
-- [ ] Phase 4 — Booking Form + API + Email Notification
+- [x] Phase 4 — Booking Form + API + Email Notification
 - [ ] Phase 5 — Admin Panel (Dashboard + CRUD)
 - [ ] Phase 6 — i18n TH/EN + SEO Optimization
 - [ ] Phase 7 — Production Deploy (VPS + GitHub Actions + SSL)
