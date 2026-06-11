@@ -1,4 +1,4 @@
-export type VehicleType = "sedan" | "suv" | "van";
+export type VehicleType = "SEDAN" | "SUV" | "VAN";
 
 export type PickupType = "airport" | "hotel" | "other";
 
