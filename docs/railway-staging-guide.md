@@ -67,6 +67,8 @@ packages:
 
 ถ้า log Railway ขึ้น `packages field missing or empty` แปลว่า Railway ยังดึง commit เก่าที่ไม่มี `packages` ให้เลือก branch/commit ใหม่แล้วกด redeploy
 
+ถ้า log ยังแสดง lockfile เก่าหลัง push แล้ว ให้ตรวจ **Service Settings → Source → Repository/Branch** ให้เป็น `KumaMai/taxi-booking` และ `main` จากนั้นใช้ **Deploy Latest Commit** หรือ redeploy แบบล้าง build cache ก่อน อย่าเปลี่ยนเป็น `--no-frozen-lockfile` เพราะจะซ่อนปัญหา lockfile mismatch
+
 ## 5. ตั้งค่า build และ migration
 
 ไปที่ **Service → Settings → Deploy** แล้วตั้งค่า:

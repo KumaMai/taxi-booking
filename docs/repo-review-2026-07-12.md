@@ -104,3 +104,4 @@ Fix-then-ship: the core application and Admin workflows are verified; production
 - Researched current managed deployment alternatives and recorded a Railway-first launch recommendation in `docs/deployment-options-2026-07-12.md`; VPS remains the long-term control/cost option.
 - Diagnosed Railway build failure: GitHub snapshot was older than the local workspace and lacked `packages: ["."]` in `pnpm-workspace.yaml`; added a staging guide warning to commit/push before deploying.
 - Fixed clean-builder Prisma generation by changing the repository `build` script to run `prisma generate` before `next build`.
+- Verified `origin/main` contains matching Upstash specifiers in both `package.json` and `pnpm-lock.yaml`; added `packageManager: pnpm@9.15.9` as a Railway cache/version consistency guard and documented source-branch/cache verification.
