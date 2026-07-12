@@ -111,3 +111,4 @@ Fix-then-ship: the core application and Admin workflows are verified; production
 - Verified unauthenticated `/admin` redirects to `/admin/login`, booking wizard reaches Steps 2 and 3 with synthetic data, and invalid booking API payload returns 400 without creating a record.
 - Submitted one synthetic staging booking through `/api/booking`; received HTTP 200 and reference `cmrhx4qxe00040mnxmggfxxxq`. Admin notification status/email delivery still needs confirmation from the configured staging inbox.
 - Reproduced a ~38-second booking response while the notification retry lifecycle ran; added bounded SMTP connection/greeting/socket timeouts to prevent an unreachable SMTP server from keeping the booking UI loading indefinitely.
+- Re-tested live staging after commit `1a57f80`: `/api/health` returned 200 and a synthetic booking returned 200 in 427 ms with reference `cmrhx8lsu00000mo3a7xv4crh`.
