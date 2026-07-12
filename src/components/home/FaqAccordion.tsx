@@ -1,81 +1,22 @@
 "use client";
 
-import { useState } from "react";
+import { useId, useState } from "react";
 import { ChevronDown } from "lucide-react";
 import type { Faq, FaqCategory } from "@prisma/client";
+import type { Locale } from "@/lib/locale";
 
 type CategoryWithFaqs = FaqCategory & { faqs: Faq[] };
 
-interface Props {
-  categories: CategoryWithFaqs[];
-}
-
-function AccordionItem({ faq }: { faq: Faq }) {
+function AccordionItem({ faq, locale }: { faq: Faq; locale: Locale }) {
   const [open, setOpen] = useState(false);
-
-  return (
-    <div className="border-b border-white/10 last:border-b-0">
-      <button
-        onClick={() => setOpen(!open)}
-        className="w-full flex items-center justify-between py-4 text-left gap-4 group"
-      >
-        <span className="text-white/80 group-hover:text-white text-sm transition-colors">
-          {faq.questionEn}
-        </span>
-        <ChevronDown
-          size={16}
-          className={`text-[#d4af37] shrink-0 transition-transform duration-200 ${open ? "rotate-180" : ""}`}
-        />
-      </button>
-      {open && (
-        <div className="pb-4 text-white/55 text-sm leading-relaxed">
-          {faq.answerEn}
-        </div>
-      )}
-    </div>
-  );
+  const contentId = useId();
+  const question = locale === "th" && faq.questionTh ? faq.questionTh : faq.questionEn;
+  const answer = locale === "th" && faq.answerTh ? faq.answerTh : faq.answerEn;
+  return <div className="border-b border-[#f3eadb]/10 last:border-0"><button onClick={() => setOpen((value) => !value)} aria-expanded={open} aria-controls={contentId} className="group flex w-full items-center justify-between gap-4 py-5 text-left"><span className="text-sm text-[#d9cbb8] transition-colors group-hover:text-[#f3eadb]">{question}</span><ChevronDown size={17} className={`shrink-0 text-[#e46d52] transition-transform duration-200 ${open ? "rotate-180" : ""}`} /></button>{open && <div id={contentId} className="pb-5 text-sm leading-relaxed text-[#d9cbb8]">{answer}</div>}</div>;
 }
 
-export default function FaqAccordion({ categories }: Props) {
+export default function FaqAccordion({ categories, locale = "en" }: { categories: CategoryWithFaqs[]; locale?: Locale }) {
   const [activeTab, setActiveTab] = useState(0);
   const active = categories[activeTab];
-
-  return (
-    <section className="bg-[#0f2040] py-14">
-      <div className="max-w-4xl mx-auto px-4">
-        <h2 className="text-center text-[#d4af37] font-bold text-2xl md:text-3xl mb-2">
-          Frequently Asked Questions
-        </h2>
-        <p className="text-center text-white/50 text-sm mb-8">
-          Everything you need to know about our service
-        </p>
-
-        {/* Category Tabs */}
-        <div className="flex flex-wrap gap-2 justify-center mb-6">
-          {categories.map((cat, i) => (
-            <button
-              key={cat.faqCategoriesId}
-              onClick={() => setActiveTab(i)}
-              className={`px-4 py-1.5 rounded-full text-sm transition-colors ${
-                i === activeTab
-                  ? "bg-[#d4af37] text-[#0a1628] font-medium"
-                  : "bg-[#0a1628] text-white/60 hover:text-white border border-white/10"
-              }`}
-            >
-              {cat.nameEn}
-            </button>
-          ))}
-        </div>
-
-        {/* FAQ Items */}
-        {active && (
-          <div className="bg-[#0a1628] rounded-2xl border border-white/10 px-6">
-            {active.faqs.map((faq) => (
-              <AccordionItem key={faq.faqsId} faq={faq} />
-            ))}
-          </div>
-        )}
-      </div>
-    </section>
-  );
+  return <section className="bg-[#102326] py-20 md:py-24"><div className="mx-auto max-w-4xl px-5 md:px-8"><p className="mb-3 text-center text-[11px] font-bold uppercase tracking-[0.22em] text-[#79b8a7]">{locale === "th" ? "ก่อนออกเดินทาง" : "Before you go"}</p><h2 className="mb-3 text-center text-4xl text-[#f3eadb] md:text-5xl">{locale === "th" ? "คำถามที่พบบ่อย" : "Questions, answered simply."}</h2><p className="mb-8 text-center text-sm text-[#d9cbb8]">{locale === "th" ? "ข้อมูลสำคัญก่อนใช้บริการรับส่ง" : "Everything you need to know before your transfer."}</p><div className="mb-6 flex flex-wrap justify-center gap-2">{categories.map((category, index) => <button key={category.faqCategoriesId} onClick={() => setActiveTab(index)} className={`rounded-full px-4 py-2 text-xs font-semibold transition-colors ${index === activeTab ? "bg-[#e46d52] text-[#102326]" : "border border-[#f3eadb]/15 bg-[#0b2a2f] text-[#d9cbb8] hover:text-[#f3eadb]"}`}>{locale === "th" ? category.nameTh : category.nameEn}</button>)}</div>{active && <div className="rounded-[1.5rem] border border-[#f3eadb]/15 bg-[#0b2a2f] px-6">{active.faqs.map((faq) => <AccordionItem key={faq.faqsId} faq={faq} locale={locale} />)}</div>}</div></section>;
 }

@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import { Toaster } from "sonner";
 import "./globals.css";
-
-const geistSans = Geist({ variable: "--font-sans", subsets: ["latin"] });
-const geistMono = Geist_Mono({ variable: "--font-mono", subsets: ["latin"] });
+import { getLocale } from "@/lib/locale";
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"),
+  alternates: { canonical: "/" },
+  openGraph: { type: "website", siteName: "Time Taxi Khaolak", url: "/", locale: "en_TH" },
+  twitter: { card: "summary_large_image", title: "Time Taxi Khaolak | Private Transfers" },
   title: {
     default: "Time Taxi Khaolak | Private Transfers",
     template: "%s | Time Taxi Khaolak",
@@ -15,16 +16,15 @@ export const metadata: Metadata = {
     "Private Taxi & Airport Transfers in Khao Lak and Phuket. Pay after trip — no deposit required. 24/7 service.",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const locale = await getLocale();
   return (
-    <html lang="th">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+    <html lang={locale}>
+      <body className="antialiased">
         {children}
         <Toaster
           position="top-center"

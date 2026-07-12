@@ -36,7 +36,48 @@ function formatDate(date: Date): string {
   });
 }
 
-function buildEmailHtml(b: BookingEmailData): string {
+export function escapeHtml(value: string): string {
+  return value.replace(
+    /[&<>"]/g,
+    (character) =>
+      ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+      })[character] ?? character,
+  );
+}
+
+function safeHttpUrl(value: string | null | undefined): string | null {
+  if (!value) return null;
+
+  try {
+    const url = new URL(value);
+    return url.protocol === "https:" || url.protocol === "http:"
+      ? escapeHtml(url.toString())
+      : null;
+  } catch {
+    return null;
+  }
+}
+
+export function buildBookingEmailHtml(b: BookingEmailData): string {
+  const bookingRef = escapeHtml(b.bookingRef);
+  const fullName = escapeHtml(b.fullName);
+  const phoneCountry = escapeHtml(b.phoneCountry);
+  const phone = escapeHtml(b.phone);
+  const email = b.email ? escapeHtml(b.email) : null;
+  const contactChannel = escapeHtml(b.contactChannel);
+  const contactInfo = escapeHtml(b.contactInfo);
+  const vehicleType = escapeHtml(b.vehicleType);
+  const pickupTime = escapeHtml(b.pickupTime);
+  const pickupType = escapeHtml(b.pickupType);
+  const pickupDetail = b.pickupDetail ? escapeHtml(b.pickupDetail) : null;
+  const dropoffLocation = escapeHtml(b.dropoffLocation);
+  const mapsLink = safeHttpUrl(b.mapsLink);
+  const notes = b.notes ? escapeHtml(b.notes) : null;
+
   return `
 <!DOCTYPE html>
 <html lang="th">
@@ -69,35 +110,35 @@ function buildEmailHtml(b: BookingEmailData): string {
     <p>New Booking Received — Please Confirm</p>
   </div>
 
-  <div class="ref">Booking Ref: ${b.bookingRef}</div>
+  <div class="ref">Booking Ref: ${bookingRef}</div>
 
   <div class="body">
 
     <div class="sec">
       <div class="sec-title">Customer Info</div>
-      <div class="row"><span class="lbl">Name</span><span class="val">${b.fullName}</span></div>
-      <div class="row"><span class="lbl">Phone</span><span class="val">${b.phoneCountry} ${b.phone}</span></div>
-      ${b.email ? `<div class="row"><span class="lbl">Email</span><span class="val">${b.email}</span></div>` : ""}
-      <div class="row"><span class="lbl">Contact via</span><span class="val"><span class="badge">${b.contactChannel}</span> ${b.contactInfo}</span></div>
+      <div class="row"><span class="lbl">Name</span><span class="val">${fullName}</span></div>
+      <div class="row"><span class="lbl">Phone</span><span class="val">${phoneCountry} ${phone}</span></div>
+      ${email ? `<div class="row"><span class="lbl">Email</span><span class="val">${email}</span></div>` : ""}
+      <div class="row"><span class="lbl">Contact via</span><span class="val"><span class="badge">${contactChannel}</span> ${contactInfo}</span></div>
     </div>
 
     <div class="sec">
       <div class="sec-title">Transfer Details</div>
-      <div class="row"><span class="lbl">Vehicle</span><span class="val"><span class="badge">${b.vehicleType}</span></span></div>
+      <div class="row"><span class="lbl">Vehicle</span><span class="val"><span class="badge">${vehicleType}</span></span></div>
       <div class="row"><span class="lbl">Passengers</span><span class="val">${b.adultPassengers} adults${b.childPassengers > 0 ? `, ${b.childPassengers} children` : ""}</span></div>
       <div class="row"><span class="lbl">Pickup Date</span><span class="val">${formatDate(b.pickupDate)}</span></div>
-      <div class="row"><span class="lbl">Pickup Time</span><span class="val">${b.pickupTime}</span></div>
-      <div class="row"><span class="lbl">Pickup Type</span><span class="val">${b.pickupType}${b.pickupDetail ? ` — ${b.pickupDetail}` : ""}</span></div>
-      <div class="row"><span class="lbl">Drop-off</span><span class="val">${b.dropoffLocation}</span></div>
-      ${b.mapsLink ? `<div class="row"><span class="lbl">Maps Link</span><span class="val"><a href="${b.mapsLink}" style="color:#185FA5">View Map</a></span></div>` : ""}
+      <div class="row"><span class="lbl">Pickup Time</span><span class="val">${pickupTime}</span></div>
+      <div class="row"><span class="lbl">Pickup Type</span><span class="val">${pickupType}${pickupDetail ? ` — ${pickupDetail}` : ""}</span></div>
+      <div class="row"><span class="lbl">Drop-off</span><span class="val">${dropoffLocation}</span></div>
+      ${mapsLink ? `<div class="row"><span class="lbl">Maps Link</span><span class="val"><a href="${mapsLink}" style="color:#185FA5">View Map</a></span></div>` : ""}
     </div>
 
     ${
-      b.notes
+      notes
         ? `
     <div class="sec">
       <div class="sec-title">Special Requests</div>
-      <p style="font-size:14px;color:#444;margin:0;">${b.notes}</p>
+      <p style="font-size:14px;color:#444;margin:0;">${notes}</p>
     </div>`
         : ""
     }
@@ -105,7 +146,7 @@ function buildEmailHtml(b: BookingEmailData): string {
   </div>
 
   <div class="cta">
-    <a href="https://wa.me/${b.phoneCountry.replace("+", "")}${b.phone}" class="btn">
+    <a href="https://wa.me/${phoneCountry.replace("+", "")}${phone.replace(/[^0-9]/g, "")}" class="btn">
       💬 Reply on WhatsApp
     </a>
   </div>
@@ -119,15 +160,40 @@ function buildEmailHtml(b: BookingEmailData): string {
 </html>`;
 }
 
+function buildBookingEmailText(b: BookingEmailData): string {
+  return [
+    `New booking: ${b.bookingRef}`,
+    `Name: ${b.fullName}`,
+    `Phone: ${b.phoneCountry} ${b.phone}`,
+    `Contact: ${b.contactChannel} ${b.contactInfo}`,
+    `Vehicle: ${b.vehicleType}`,
+    `Passengers: ${b.adultPassengers} adults, ${b.childPassengers} children`,
+    `Pickup: ${formatDate(b.pickupDate)} ${b.pickupTime}`,
+    `Pickup location: ${b.pickupType} ${b.pickupDetail ?? ""}`.trim(),
+    `Drop-off: ${b.dropoffLocation}`,
+    b.mapsLink ? `Map: ${b.mapsLink}` : "",
+    b.notes ? `Notes: ${b.notes}` : "",
+  ]
+    .filter(Boolean)
+    .join("\n");
+}
+
 export async function sendBookingEmail(
   booking: BookingEmailData,
 ): Promise<void> {
-  const subject = `🚗 New Booking ${booking.bookingRef} — ${booking.fullName} | ${booking.vehicleType}`;
+  const cleanRef = booking.bookingRef.replace(/[\r\n]/g, " ");
+  const cleanName = booking.fullName.replace(/[\r\n]/g, " ");
+  const subject = `🚗 New Booking ${cleanRef} — ${cleanName} | ${booking.vehicleType}`;
+
+  if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS || !process.env.EMAIL_TO) {
+    throw new Error("Email environment variables are not configured");
+  }
 
   await transporter.sendMail({
     from: `"Time Taxi Khaolak" <${process.env.EMAIL_USER}>`,
     to: process.env.EMAIL_TO,
     subject,
-    html: buildEmailHtml(booking),
+    html: buildBookingEmailHtml(booking),
+    text: buildBookingEmailText(booking),
   });
 }

@@ -11,6 +11,10 @@ const adapter = new PrismaPg({
 const prisma = new PrismaClient({ adapter });
 
 async function main() {
+  if (process.env.NODE_ENV === "production") {
+    throw new Error("Destructive seed is disabled in production");
+  }
+
   console.log("🌱 Starting seed v3...");
 
   // ─── 1. PRICE ZONES + ROUTES (7 zones, 46 routes) ─────────
@@ -582,6 +586,7 @@ async function main() {
         reviewerName: "Sarah M.",
         reviewText:
           "Excellent service and very friendly driver! The van was clean and comfortable. Will definitely use again on our next trip.",
+        reviewTextTh: "บริการยอดเยี่ยม คนขับเป็นมิตรมาก รถตู้สะอาดและนั่งสบาย จะใช้บริการอีกแน่นอนในทริปหน้า",
         rating: 5,
         source: "TRIPADVISOR",
       },
@@ -589,11 +594,13 @@ async function main() {
         reviewerName: "James K.",
         reviewText:
           "Clean car, on-time pick-up, and safe trip. Driver spoke good English and gave great local tips along the way.",
+        reviewTextTh: "รถสะอาด รับตรงเวลา และเดินทางปลอดภัย คนขับพูดภาษาอังกฤษได้ดีพร้อมแนะนำสถานที่ท้องถิ่นตลอดทาง",
         rating: 5,
         source: "GOOGLE",
       },
       {
         reviewerName: "Marie D.",
+        reviewTextTh: "บริการรถตู้ส่วนตัวที่ดีที่สุดในเขาหลัก ขอแนะนำอย่างยิ่ง จองผ่าน WhatsApp และยืนยันภายในไม่กี่นาที ไม่ต้องวางมัดจำ",
         reviewText:
           "Best private van service in Khao Lak — highly recommended! Booked via WhatsApp, confirmed within minutes. No deposit needed.",
         rating: 5,
@@ -602,7 +609,8 @@ async function main() {
       {
         reviewerName: "วิภาพร มาลา",
         reviewText:
-          "บริการดีมาก คนขับสุภาพและตรงเวลา รถสะอาดมาก ราคาไม่แพง แนะนำมากเลยค่ะ",
+          "Excellent service, polite driver, and on-time pickup. The vehicle was very clean and the price was fair.",
+        reviewTextTh: "บริการดีมาก คนขับสุภาพและตรงเวลา รถสะอาดมาก ราคาไม่แพง แนะนำมากเลยค่ะ",
         rating: 5,
         source: "DIRECT",
       },
@@ -610,6 +618,7 @@ async function main() {
         reviewerName: "Tom & Lisa",
         reviewText:
           "Used Time Taxi for airport transfer with 2 kids and lots of luggage. The Van was perfect, driver very patient and helpful.",
+        reviewTextTh: "ใช้ Time Taxi รับส่งสนามบินพร้อมเด็ก 2 คนและสัมภาระจำนวนมาก รถตู้เหมาะมาก คนขับใจเย็นและช่วยเหลือดี",
         rating: 5,
         source: "GOOGLE",
       },
@@ -617,6 +626,7 @@ async function main() {
         reviewerName: "Akira T.",
         reviewText:
           "Punctual, professional, and very clean vehicle. Easy booking through LINE. Will use again for our next Phuket trip.",
+        reviewTextTh: "ตรงเวลา เป็นมืออาชีพ และรถสะอาดมาก จองผ่าน LINE ได้ง่าย จะใช้บริการอีกในทริปภูเก็ตครั้งหน้า",
         rating: 5,
         source: "DIRECT",
       },
@@ -806,13 +816,15 @@ async function main() {
   console.log("👤 Seeding admin user...");
 
   await prisma.adminUser.deleteMany();
-  const passwordHash = await bcrypt.hash(
-    process.env.ADMIN_PASSWORD || "admin123",
-    12,
-  );
+  const adminEmail = process.env.ADMIN_EMAIL;
+  const adminPassword = process.env.ADMIN_PASSWORD;
+  if (!adminEmail || !adminPassword) {
+    throw new Error("ADMIN_EMAIL and ADMIN_PASSWORD are required for seeding");
+  }
+  const passwordHash = await bcrypt.hash(adminPassword, 12);
   await prisma.adminUser.create({
     data: {
-      email: process.env.ADMIN_EMAIL || "admin@timetaxikhaolak.com",
+      email: adminEmail,
       passwordHash,
       name: "Admin",
       role: "SUPER_ADMIN",
@@ -828,15 +840,15 @@ async function main() {
     data: [
       {
         key: "whatsapp_number",
-        value: "+66986822951",
+        value: "+669374777528",
         description: "WhatsApp contact number — ใช้กับปุ่ม WhatsApp",
       },
       {
         key: "line_id",
-        value: "@timetaxikhaolak",
+        value: "noodang002428",
         description: "LINE Official Account ID",
       },
-      { key: "phone", value: "0986822951", description: "เบอร์โทรศัพท์หลัก" },
+      { key: "phone", value: "0937477528", description: "เบอร์โทรศัพท์หลัก" },
       {
         key: "email",
         value: "timetaxikhaolak@gmail.com",
@@ -844,7 +856,7 @@ async function main() {
       },
       {
         key: "facebook_page",
-        value: "Time Taxi Khao Lak",
+        value: "nongluck dongluck",
         description: "Facebook Page name",
       },
       {

@@ -1,97 +1,14 @@
 import Link from "next/link";
+import { ArrowUpRight, CarFront, Luggage, UsersRound } from "lucide-react";
+import type { Locale } from "@/lib/locale";
 
 const VEHICLES = [
-  {
-    type: "Standard",
-    emoji: "🚗",
-    passengers: "1-2",
-    luggage: "2 bags",
-    price: "1,200",
-    desc: "Sedan — comfortable for couples or solo travelers",
-    color: "#378ADD",
-  },
-  {
-    type: "SUV",
-    emoji: "🚙",
-    passengers: "1-4",
-    luggage: "4 bags",
-    price: "1,300",
-    desc: "SUV — spacious for families or small groups",
-    color: "#d4af37",
-    featured: true,
-  },
-  {
-    type: "Van",
-    emoji: "🚐",
-    passengers: "1-9",
-    luggage: "8+ bags",
-    price: "1,400",
-    desc: "Van — perfect for large groups with lots of luggage",
-    color: "#0F6E56",
-  },
+  { type: "Sedan", passengers: "1–2", passengersTh: "1–2", luggage: "2 bags", luggageTh: "2 ใบ", price: "1,200", note: "A quiet, comfortable ride for couples and solo travellers.", noteTh: "รถเงียบและสะดวกสบาย เหมาะสำหรับคู่รักหรือเดินทางคนเดียว" },
+  { type: "SUV", passengers: "1–4", passengersTh: "1–4", luggage: "4 bags", luggageTh: "4 ใบ", price: "1,300", note: "More room to stretch out after a long flight.", noteTh: "พื้นที่กว้างขึ้น ให้คุณพักผ่อนได้สบายหลังเที่ยวบินยาว", featured: true },
+  { type: "Van", passengers: "1–9", passengersTh: "1–9", luggage: "8+ bags", luggageTh: "8+ ใบ", price: "1,400", note: "The easy choice for families, friends, and big luggage.", noteTh: "ตัวเลือกสบายสำหรับครอบครัว เพื่อน และสัมภาระจำนวนมาก" },
 ];
 
-export default function VehicleCards() {
-  return (
-    <section className="bg-[#0f2040] py-14">
-      <div className="max-w-7xl mx-auto px-4">
-        <h2 className="text-center text-[#d4af37] font-bold text-2xl md:text-3xl mb-2">
-          Vehicle Types
-        </h2>
-        <p className="text-center text-white/50 text-sm mb-10">
-          All vehicles are clean, fully insured, and driven by English-speaking
-          professionals
-        </p>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
-          {VEHICLES.map((v) => (
-            <div
-              key={v.type}
-              className={`relative bg-[#0a1628] border rounded-2xl p-6 flex flex-col items-center text-center transition-transform hover:-translate-y-1 ${
-                v.featured
-                  ? "border-[#d4af37] shadow-lg shadow-[#d4af37]/10"
-                  : "border-white/10 hover:border-white/20"
-              }`}
-            >
-              {v.featured && (
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#d4af37] text-[#0a1628] text-[10px] font-bold px-3 py-0.5 rounded-full">
-                  MOST POPULAR
-                </div>
-              )}
-
-              <div className="text-5xl mb-4">{v.emoji}</div>
-              <h3 className="text-white font-bold text-xl mb-1">{v.type}</h3>
-
-              <div className="flex items-center gap-4 mb-3 text-sm text-white/60">
-                <span>👤 {v.passengers} pax</span>
-                <span>🧳 {v.luggage}</span>
-              </div>
-
-              <p className="text-white/50 text-xs mb-4">{v.desc}</p>
-
-              <div className="mt-auto">
-                <p className="text-white/40 text-xs mb-1">Starting from</p>
-                <p className="text-2xl font-bold" style={{ color: v.color }}>
-                  {v.price}{" "}
-                  <span className="text-sm font-normal text-white/50">THB</span>
-                </p>
-              </div>
-
-              <Link
-                href="/booking"
-                className="mt-4 w-full py-2.5 rounded-full text-sm font-medium transition-colors"
-                style={{
-                  background: v.featured ? "#d4af37" : "transparent",
-                  color: v.featured ? "#0a1628" : "#d4af37",
-                  border: v.featured ? "none" : "1px solid #d4af37",
-                }}
-              >
-                Book Now
-              </Link>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
+export default function VehicleCards({ locale = "en" }: { locale?: Locale }) {
+  const thai = locale === "th";
+  return <section className="bg-[#f3eadb] py-20 text-[#102326] md:py-24"><div className="mx-auto max-w-7xl px-5 md:px-8"><div className="mb-11 flex flex-col justify-between gap-5 md:flex-row md:items-end"><div><p className="mb-3 text-[11px] font-bold uppercase tracking-[0.22em] text-[#e46d52]">{thai ? "เลือกรถที่เหมาะกับคุณ" : "Choose your space"}</p><h2 className="max-w-lg text-4xl leading-tight sm:text-5xl">{thai ? "รถดีๆ ทำให้การเดินทางดีขึ้น" : "A good ride sets the tone."}</h2></div><p className="max-w-sm text-sm leading-7 text-[#102326]/65">{thai ? "รถสะอาด ปลอดภัย พร้อมคนขับท้องถิ่นที่สื่อสารภาษาอังกฤษได้" : "Clean, insured vehicles and an English-speaking local driver for every private transfer."}</p></div><div className="grid gap-4 lg:grid-cols-3">{VEHICLES.map((vehicle) => <article key={vehicle.type} className={`group relative flex min-h-[340px] flex-col overflow-hidden rounded-[1.5rem] border p-6 transition-transform hover:-translate-y-1 ${vehicle.featured ? "border-[#e46d52] bg-[#0b2a2f] text-[#f3eadb]" : "border-[#102326]/15 bg-[#eadfce]"}`}>{vehicle.featured && <span className="absolute right-5 top-5 rounded-full bg-[#e46d52] px-3 py-1 text-[9px] font-bold uppercase tracking-[0.15em] text-[#102326]">{thai ? "ยอดนิยม" : "Most requested"}</span>}<div className={`mb-12 flex h-14 w-14 items-center justify-center rounded-full border ${vehicle.featured ? "border-[#e46d52] text-[#e46d52]" : "border-[#102326]/20 text-[#0b2a2f]"}`}><CarFront size={25} strokeWidth={1.5} /></div><h3 className="text-3xl">{vehicle.type}</h3><p className={`mt-2 max-w-xs text-sm leading-6 ${vehicle.featured ? "text-[#d9cbb8]" : "text-[#102326]/65"}`}>{thai ? vehicle.noteTh : vehicle.note}</p><div className={`mt-6 flex gap-4 border-t pt-4 text-xs ${vehicle.featured ? "border-[#f3eadb]/15 text-[#d9cbb8]" : "border-[#102326]/15 text-[#102326]/65"}`}><span className="inline-flex items-center gap-1.5"><UsersRound size={14} /> {thai ? vehicle.passengersTh : vehicle.passengers} {thai ? "คน" : "pax"}</span><span className="inline-flex items-center gap-1.5"><Luggage size={14} /> {thai ? vehicle.luggageTh : vehicle.luggage}</span></div><div className="mt-auto flex items-end justify-between pt-7"><div><p className={`text-[10px] uppercase tracking-[0.16em] ${vehicle.featured ? "text-[#d9cbb8]" : "text-[#102326]/55"}`}>{thai ? "เริ่มต้น" : "From"}</p><p className={`text-2xl ${vehicle.featured ? "text-[#f3eadb]" : "text-[#0b2a2f]"}`}>{vehicle.price} <span className="text-xs">THB</span></p></div><Link href="/booking" aria-label={`${thai ? "จองรถ" : "Book"} ${vehicle.type}`} className={`flex h-10 w-10 items-center justify-center rounded-full transition-colors ${vehicle.featured ? "bg-[#e46d52] text-[#102326] hover:bg-[#f28a70]" : "border border-[#102326]/20 text-[#0b2a2f] hover:border-[#e46d52] hover:text-[#e46d52]"}`}><ArrowUpRight size={17} /></Link></div></article>)}</div></div></section>;
 }

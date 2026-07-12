@@ -43,6 +43,12 @@ enum BookingSource {
   WECHAT
 }
 
+enum BookingNotificationStatus {
+  PENDING
+  SENT
+  FAILED
+}
+
 enum ReviewSource {
   TRIPADVISOR
   GOOGLE
@@ -78,10 +84,16 @@ model Booking {
   notes           String?
   status          BookingStatus  @default(PENDING)
   source          BookingSource  @default(WEBSITE)
+  notificationStatus BookingNotificationStatus @default(PENDING) @map("notification_status")
+  notificationAttempts Int        @default(0) @map("notification_attempts")
+  notificationLastError String?    @map("notification_last_error")
+  notificationSentAt DateTime?     @map("notification_sent_at")
   createdAt       DateTime       @default(now()) @map("created_at")
   updatedAt       DateTime       @updatedAt @map("updated_at")
 
   @@map("bookings")
+  @@index([status, createdAt])
+  @@index([pickupDate])
 }
 
 // ─── TABLE 2: price_zones ─────────────────────────────────────
@@ -114,6 +126,7 @@ model PriceRoute {
   isActive      Boolean   @default(true) @map("is_active")
 
   @@map("price_routes")
+  @@index([zoneId, isActive, sortOrder])
 }
 
 // ─── TABLE 4: reviews ─────────────────────────────────────────
@@ -122,6 +135,7 @@ model Review {
   reviewsId    Int          @id @default(autoincrement()) @map("reviews_id")
   reviewerName String       @map("reviewer_name")
   reviewText   String       @map("review_text")
+  reviewTextTh String?      @map("review_text_th")
   rating       Int          @default(5)
   source       ReviewSource @default(DIRECT)
   photoUrl     String?      @map("photo_url")
@@ -129,6 +143,7 @@ model Review {
   createdAt    DateTime     @default(now()) @map("created_at")
 
   @@map("reviews")
+  @@index([isActive, createdAt])
 }
 
 // ─── TABLE 5: faq_categories ──────────────────────────────────
@@ -158,6 +173,7 @@ model Faq {
   isActive   Boolean     @default(true) @map("is_active")
 
   @@map("faqs")
+  @@index([categoryId, isActive, sortOrder])
 }
 
 // ─── TABLE 7: attractions ─────────────────────────────────────
@@ -173,6 +189,7 @@ model Attraction {
   isActive      Boolean @default(true) @map("is_active")
 
   @@map("attractions")
+  @@index([isActive, sortOrder])
 }
 
 // ─── TABLE 8: admin_users ─────────────────────────────────────
@@ -185,6 +202,7 @@ model AdminUser {
   role         AdminRole @default(ADMIN)
   lastLoginAt  DateTime? @map("last_login_at")
   createdAt    DateTime  @default(now()) @map("created_at")
+  auditLogs    AuditLog[]
 
   @@map("admin_users")
 }
@@ -199,4 +217,20 @@ model Setting {
   updatedAt   DateTime @updatedAt @map("updated_at")
 
   @@map("settings")
+}
+
+model AuditLog {
+  auditLogsId Int      @id @default(autoincrement()) @map("audit_logs_id")
+  adminUserId Int      @map("admin_user_id")
+  action      String
+  entity      String
+  entityId    String
+  metadata    Json?
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  adminUser AdminUser @relation(fields: [adminUserId], references: [adminUsersId])
+
+  @@index([adminUserId, createdAt])
+  @@index([entity, entityId, createdAt])
+  @@map("audit_logs")
 }

@@ -1,105 +1,64 @@
 import Link from "next/link";
+import { ArrowUpRight, Clock3, MapPin, ShieldCheck } from "lucide-react";
+import type { PublicSettings } from "@/lib/settings";
+import type { Locale } from "@/lib/locale";
 
-export default function HeroSection() {
+export default function HeroSection({ settings, locale = "en" }: { settings: PublicSettings; locale?: Locale }) {
+  const thai = locale === "th";
+  const whatsappLink = `https://wa.me/${settings.whatsapp.replace(/[^0-9]/g, "")}`;
+
   return (
-    <section className="bg-[#0a1628] relative overflow-hidden">
-      {/* Background gradient */}
-      <div className="absolute inset-0 bg-gradient-to-br from-[#0a1628] via-[#0f2040] to-[#020b18] pointer-events-none" />
-
-      <div className="relative max-w-7xl mx-auto px-4 py-16 md:py-24">
-        {/* Top badge */}
-        <div className="flex justify-center mb-6">
-          <span className="bg-[#d4af37]/10 border border-[#d4af37]/30 text-[#d4af37] text-sm px-4 py-1.5 rounded-full">
-            Pay after trip — No deposit required ✓
-          </span>
-        </div>
-
-        {/* Main title */}
-        <h1 className="text-center text-white font-bold text-2xl md:text-4xl lg:text-5xl leading-tight mb-6 max-w-4xl mx-auto">
-          Taxi Phuket Airport to Khaolak
-          <br />
-          <span className="text-[#d4af37]">or</span> Taxi Khaolak to Phuket
-          Airport <span className="text-[#d4af37]">International</span>
-          <br />
-          <span className="text-xl md:text-2xl font-normal text-white/70">
-            — Private Transfer 24/7
-          </span>
-        </h1>
-
-        {/* CTA Button */}
-        <div className="flex justify-center mb-10">
-          <Link
-            href="/booking"
-            className="bg-[#d4af37] hover:bg-[#f4c430] text-[#0a1628] font-bold text-lg px-8 py-4 rounded-full transition-all hover:scale-105 shadow-lg shadow-[#d4af37]/25"
-          >
-            Booking Now
-          </Link>
-        </div>
-
-        {/* Contact grid */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 max-w-3xl mx-auto mb-10">
-          {[
-            {
-              icon: "💬",
-              label: "WhatsApp",
-              value: "+66 986 822 951",
-              href: "https://wa.me/66986822951",
-            },
-            {
-              icon: "📱",
-              label: "LINE",
-              value: "0986822951",
-              href: "https://line.me/ti/p/~@timetaxikhaolak",
-            },
-            {
-              icon: "📞",
-              label: "Phone",
-              value: "0986822951",
-              href: "tel:0986822951",
-            },
-            {
-              icon: "✉️",
-              label: "Email",
-              value: "timetaxikhaolak@gmail.com",
-              href: "mailto:timetaxikhaolak@gmail.com",
-            },
-          ].map((c) => (
-            <a
-              key={c.label}
-              href={c.href}
-              target={c.href.startsWith("http") ? "_blank" : undefined}
-              rel={
-                c.href.startsWith("http") ? "noopener noreferrer" : undefined
-              }
-              className="bg-[#0f2040] border border-[#d4af37]/20 rounded-xl p-3 text-center hover:border-[#d4af37]/50 transition-colors group"
-            >
-              <div className="text-xl mb-1">{c.icon}</div>
-              <div className="text-[#d4af37] text-xs font-medium">
-                {c.label}
-              </div>
-              <div className="text-white/50 text-[10px] mt-0.5 truncate">
-                {c.value}
-              </div>
+    <section className="relative overflow-hidden bg-[#0b2a2f]">
+      <div className="absolute inset-0 opacity-20 [background-image:linear-gradient(rgba(243,234,219,.2)_1px,transparent_1px),linear-gradient(90deg,rgba(243,234,219,.2)_1px,transparent_1px)] [background-size:64px_64px]" />
+      <div className="relative mx-auto grid max-w-7xl gap-12 px-5 py-16 md:px-8 md:py-24 lg:grid-cols-[1.05fr_.95fr] lg:items-center lg:gap-20 lg:py-28">
+        <div>
+          <p className="mb-5 flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.24em] text-[#e46d52]">
+            <span className="h-px w-10 bg-[#e46d52]" /> {thai ? "ภาคใต้ ประเทศไทย เดินทางถึงหน้าประตู" : "Southern Thailand, door to door"}
+          </p>
+          <h1 className="max-w-2xl text-5xl leading-[0.98] text-[#f3eadb] sm:text-6xl lg:text-7xl">
+            {locale === "th" ? <>เดินทางลงใต้ <em className="text-[#e46d52]">ง่ายๆ</em></> : <>Your easy way <em className="text-[#e46d52]">south.</em></>}
+          </h1>
+          <p className="mt-7 max-w-xl text-base leading-8 text-[#d9cbb8] sm:text-lg">
+            {thai ? "บริการรถรับส่งส่วนตัวระหว่างภูเก็ตและเขาหลัก พร้อมคนขับท้องถิ่น ราคาชัดเจน และไม่ต้องวางมัดจำก่อนเดินทาง" : "Private airport transfers between Phuket and Khao Lak, with a local driver, a clear price, and no deposit before you travel."}
+          </p>
+          <div className="mt-9 flex flex-wrap items-center gap-3">
+            <Link href="/booking" className="group inline-flex items-center gap-3 rounded-full bg-[#e46d52] px-6 py-3.5 text-sm font-bold text-[#102326] transition-transform hover:-translate-y-0.5">
+              {thai ? "วางแผนการเดินทาง" : "Plan my transfer"} <ArrowUpRight size={17} className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+            </Link>
+            <a href={whatsappLink} target="_blank" rel="noopener noreferrer" className="rounded-full border border-[#f3eadb]/20 px-6 py-3.5 text-sm font-medium text-[#f3eadb] transition-colors hover:border-[#e46d52] hover:text-[#e46d52]">
+              {thai ? "สอบถามผ่าน WhatsApp" : "Ask on WhatsApp"}
             </a>
-          ))}
+          </div>
+          <div className="mt-10 flex flex-wrap gap-x-6 gap-y-3 text-xs text-[#d9cbb8]">
+            <span className="inline-flex items-center gap-2"><ShieldCheck size={15} className="text-[#79b8a7]" /> {thai ? "จ่ายหลังเดินทาง" : "Pay after trip"}</span>
+            <span className="inline-flex items-center gap-2"><Clock3 size={15} className="text-[#79b8a7]" /> {thai ? "บริการ 24 ชั่วโมง" : "24/7 service"}</span>
+            <span className="inline-flex items-center gap-2"><MapPin size={15} className="text-[#79b8a7]" /> {thai ? "คนขับท้องถิ่น" : "Local drivers"}</span>
+          </div>
         </div>
 
-        {/* Feature points */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 max-w-4xl mx-auto">
-          {[
-            { icon: "🚗", text: "Private taxi — no sharing" },
-            { icon: "💰", text: "Pay after trip — no deposit" },
-            { icon: "🕐", text: "24/7 service available" },
-            { icon: "📲", text: "Book now — reply within 1 minute" },
-          ].map((f) => (
-            <div
-              key={f.text}
-              className="flex items-center gap-2 bg-[#0f2040]/60 rounded-lg px-3 py-2"
-            >
-              <span className="text-base">{f.icon}</span>
-              <span className="text-white/70 text-xs">{f.text}</span>
+        <div className="relative min-h-[390px] overflow-hidden rounded-[2rem] border border-[#f3eadb]/15 bg-[#102326] p-5 shadow-2xl shadow-black/20 sm:min-h-[460px] sm:p-8">
+          <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-[#e46d52]/20 blur-3xl" />
+          <div className="absolute -bottom-24 -left-10 h-56 w-56 rounded-full bg-[#79b8a7]/20 blur-3xl" />
+          <div className="relative flex h-full flex-col justify-between">
+            <div className="flex items-start justify-between text-[10px] font-semibold uppercase tracking-[0.18em] text-[#d9cbb8]">
+              <span>{thai ? "เส้นทาง / 01" : "Route note / 01"}</span><span className="text-[#e46d52]">{thai ? "ชายฝั่งอันดามัน" : "Andaman coast"}</span>
             </div>
-          ))}
+            <div className="my-10">
+              <div className="flex items-center gap-4">
+                <div className="flex h-12 w-12 items-center justify-center rounded-full border border-[#e46d52] text-[#e46d52]"><MapPin size={19} /></div>
+                <div><p className="text-[10px] uppercase tracking-[0.18em] text-[#d9cbb8]">{thai ? "จาก" : "From"}</p><p className="mt-1 text-2xl text-[#f3eadb]">{thai ? "สนามบินภูเก็ต" : "Phuket Airport"}</p></div>
+              </div>
+              <div className="ml-6 h-20 border-l border-dashed border-[#e46d52]/60" />
+              <div className="flex items-center gap-4">
+                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#e46d52] text-[#102326]"><MapPin size={19} /></div>
+                <div><p className="text-[10px] uppercase tracking-[0.18em] text-[#d9cbb8]">{thai ? "ถึง" : "To"}</p><p className="mt-1 text-2xl text-[#f3eadb]">{thai ? "เขาหลัก" : "Khao Lak"}</p></div>
+              </div>
+            </div>
+            <div className="flex items-end justify-between border-t border-[#f3eadb]/15 pt-5">
+              <div><p className="text-[10px] uppercase tracking-[0.18em] text-[#d9cbb8]">{thai ? "เริ่มต้นที่" : "Starting from"}</p><p className="mt-1 text-3xl text-[#f3eadb]">1,200 <span className="text-sm text-[#d9cbb8]">THB</span></p></div>
+              <span className="rounded-full bg-[#79b8a7]/15 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-[#79b8a7]">{thai ? "รถส่วนตัว" : "Private ride"}</span>
+            </div>
+          </div>
         </div>
       </div>
     </section>

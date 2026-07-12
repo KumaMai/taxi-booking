@@ -2,6 +2,7 @@
 
 # dependencies
 /node_modules
+/.venv
 /.pnp
 .pnp.*
 .yarn/*
@@ -12,6 +13,9 @@
 
 # testing
 /coverage
+/artifacts/e2e
+__pycache__/
+*.pyc
 
 # next.js
 /.next/

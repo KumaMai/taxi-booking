@@ -1,90 +1,30 @@
 import Link from "next/link";
+import type { PublicSettings } from "@/lib/settings";
+import type { Locale } from "@/lib/locale";
 
 const FOOTER_LINKS = [
-  { href: "/booking", label: "Booking" },
-  { href: "/price-list", label: "Price List" },
-  { href: "/travel", label: "Travel Recommendations" },
-  { href: "/qa", label: "Q&A" },
-  { href: "/reviews", label: "Reviews" },
-  { href: "/contact", label: "Contact Me" },
-  { href: "/about", label: "About Us" },
-];
+  ["/booking", "Booking", "จองรถ"],
+  ["/price-list", "Price List", "ราคา"],
+  ["/travel", "Travel Recommendations", "สถานที่ท่องเที่ยว"],
+  ["/qa", "Q&A", "คำถามที่พบบ่อย"],
+  ["/reviews", "Reviews", "รีวิว"],
+  ["/contact", "Contact Me", "ติดต่อเรา"],
+  ["/about", "About Us", "เกี่ยวกับเรา"],
+] as const;
 
-export default function Footer() {
+export default function Footer({ settings: s, locale = "en" }: { settings: PublicSettings; locale?: Locale }) {
+  const thai = locale === "th";
   return (
-    <footer className="bg-[#020b18] border-t border-[#d4af37]/15 mt-auto">
-      <div className="max-w-7xl mx-auto px-4 py-10 grid grid-cols-1 md:grid-cols-3 gap-8">
-        {/* Left — Contact */}
+    <footer className="mt-auto border-t border-[#f3eadb]/10 bg-[#102326]">
+      <div className="mx-auto grid max-w-7xl grid-cols-1 gap-10 px-5 py-14 md:grid-cols-[1.1fr_.8fr_1fr] md:px-8">
         <div>
-          <div className="flex items-center gap-3 mb-4">
-            <div className="w-10 h-10 rounded-full border-2 border-[#d4af37] flex items-center justify-center">
-              <span className="text-[#d4af37] font-bold text-[9px] text-center leading-tight">
-                TIME
-                <br />
-                TAXI
-              </span>
-            </div>
-            <div>
-              <p className="text-[#d4af37] font-semibold text-sm">
-                Time Taxi Khao Lak
-              </p>
-              <p className="text-white/40 text-xs">
-                Private Airport Transfer Service
-              </p>
-            </div>
-          </div>
-          <div className="space-y-1.5 text-sm text-white/60">
-            <p>📱 WhatsApp: +66 9868 22951</p>
-            <p>💬 Line: 0986822951</p>
-            <p>📞 Tel: 0986822951</p>
-            <p>✉️ Email: timetaxikhaolak@gmail.com</p>
-            <p>📘 Facebook: Time Taxi Khao Lak</p>
-          </div>
+          <div className="mb-5 flex items-center gap-3"><div className="flex h-10 w-10 items-center justify-center rounded-full border border-[#e46d52]"><span className="text-center text-[8px] font-semibold leading-tight tracking-[0.12em] text-[#f3eadb]">TIME<br />TAXI</span></div><div><p className="text-sm font-semibold text-[#f3eadb]">Time Taxi Khao Lak</p><p className="text-xs text-[#d9cbb8]">{thai ? "บริการรถรับส่งสนามบินส่วนตัว" : "Private Airport Transfer Service"}</p></div></div>
+          <div className="space-y-1.5 text-sm text-[#d9cbb8]"><p>📱 WhatsApp: {s.whatsapp}</p><p>💬 LINE: {s.lineId}</p><p>📞 {thai ? "โทร" : "Tel"}: {s.phone}</p><p>✉️ Email: {s.email}</p><p>📘 Facebook: {s.facebookPage}</p></div>
         </div>
-
-        {/* Center — TripAdvisor */}
-        <div className="flex flex-col items-center">
-          <p className="text-white/40 text-xs mb-3">TripAdvisor</p>
-          <div className="bg-[#00aa6c] rounded px-5 py-3 text-center">
-            <p className="text-white text-[10px] font-medium">RECOMMENDED ON</p>
-            <p className="text-white font-bold text-sm">TripAdvisor</p>
-            <p className="text-white/80 text-[10px]">Time Taxi Khaolak</p>
-          </div>
-        </div>
-
-        {/* Right — Description */}
-        <div>
-          <p className="text-[#d4af37] font-semibold text-sm mb-3">
-            TimeTaxiKhaolak
-          </p>
-          <p className="text-white/55 text-xs leading-relaxed">
-            We are ready to serve you 24 hours a day, every day. No matter where
-            you are, you won&apos;t miss any journey. Our drivers are
-            experienced and knowledgeable, providing professional service that
-            ensures your trip to your destination is convenient and excellent.
-          </p>
-        </div>
+        <div className="flex flex-col items-center"><p className="mb-3 text-xs text-[#d9cbb8]">Tripadvisor</p><div className="rounded bg-[#79b8a7] px-5 py-3 text-center text-[#102326]"><p className="text-[10px] font-medium">RECOMMENDED ON</p><p className="text-sm font-bold">Tripadvisor</p><p className="text-[10px] opacity-70">Time Taxi Khaolak</p></div></div>
+        <div><p className="mb-3 text-sm font-semibold text-[#e46d52]">TimeTaxiKhaolak</p><p className="text-xs leading-relaxed text-[#d9cbb8]">{thai ? "พร้อมให้บริการทุกวันตลอด 24 ชั่วโมง ดูแลการเดินทางของคุณด้วยคนขับท้องถิ่นที่มีประสบการณ์" : "We are ready to serve you 24 hours a day. Our experienced local drivers provide a convenient, reliable journey."}</p></div>
       </div>
-
-      {/* Bottom */}
-      <div className="border-t border-white/5 py-4">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="flex flex-wrap justify-center gap-x-4 gap-y-1 mb-3">
-            {FOOTER_LINKS.map((l) => (
-              <Link
-                key={l.href}
-                href={l.href}
-                className="text-white/35 hover:text-[#d4af37] text-xs transition-colors"
-              >
-                {l.label}
-              </Link>
-            ))}
-          </div>
-          <p className="text-center text-white/25 text-xs">
-            © 2025 Time Taxi Khaolak
-          </p>
-        </div>
-      </div>
+      <div className="border-t border-[#f3eadb]/10 py-5"><div className="mx-auto max-w-7xl px-5 md:px-8"><div className="mb-3 flex flex-wrap justify-center gap-x-4 gap-y-1">{FOOTER_LINKS.map(([href, label, labelTh]) => <Link key={href} href={href} className="text-xs text-[#d9cbb8]/70 transition-colors hover:text-[#e46d52]">{thai ? labelTh : label}</Link>)}</div><p className="text-center text-xs text-[#d9cbb8]/45">© {new Date().getFullYear()} Time Taxi Khaolak</p></div></div>
     </footer>
   );
 }

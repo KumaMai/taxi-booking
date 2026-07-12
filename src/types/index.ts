@@ -1,10 +1,10 @@
 export type VehicleType = "SEDAN" | "SUV" | "VAN";
 
-export type PickupType = "airport" | "hotel" | "other";
+export type PickupType = "AIRPORT" | "HOTEL" | "OTHER";
 
-export type BookingStatus = "pending" | "confirmed" | "completed" | "cancelled";
+export type BookingStatus = "PENDING" | "CONFIRMED" | "COMPLETED" | "CANCELLED";
 
-export type ContactChannel = "whatsapp" | "line" | "wechat" | "email";
+export type ContactChannel = "WHATSAPP" | "LINE" | "WECHAT" | "EMAIL";
 
 export interface BookingFormData {
   fullName: string;

@@ -163,14 +163,31 @@ cp .env.example .env.local
 # Generate Prisma client
 npx prisma generate
 
-# Push schema to database
-npx prisma db push
+# Apply versioned database migrations
+pnpm prisma migrate deploy
 
 # Seed data
 npx prisma db seed
 
 # Start development server
 pnpm dev
+```
+
+If the local database was created with `prisma db push` before the initial
+migration was added, baseline it once instead of applying the initial SQL over
+existing tables:
+
+```bash
+pnpm prisma migrate resolve --applied 20260710000000_init
+```
+
+Run the same checks used by CI with:
+
+```bash
+pnpm test
+pnpm lint
+pnpm typecheck
+pnpm build
 ```
 
 เปิด [http://localhost:3000](http://localhost:3000)
@@ -222,6 +239,13 @@ docker compose -f docker-compose.dev.yml up -d
 # pgAdmin: http://localhost:8080
 # Email: admin@taxi.dev | Password: admin123
 ```
+
+## Current implementation status
+
+- Public transfer pages and the booking wizard are implemented.
+- Booking API validation, rate limiting, email templating, and database persistence are covered by tests.
+- Protected admin dashboard and CRUD workflows are implemented for bookings, prices, reviews, FAQs, and settings.
+- English is the default locale with a Thai navigation toggle; production SMTP credentials and deployment infrastructure remain environment-specific.
 
 ## 📦 Deployment (Phase 7)
 

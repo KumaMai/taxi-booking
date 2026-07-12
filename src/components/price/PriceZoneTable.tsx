@@ -1,14 +1,16 @@
 import type { PriceZone, PriceRoute } from "@prisma/client";
+import type { Locale } from "@/lib/locale";
 
 type ZoneWithRoutes = PriceZone & { routes: PriceRoute[] };
 
-export default function PriceZoneTable({ zone }: { zone: ZoneWithRoutes }) {
+export default function PriceZoneTable({ zone, locale = "en" }: { zone: ZoneWithRoutes; locale?: Locale }) {
+  const thai = locale === "th";
   return (
     <div className="mb-8">
       {/* Zone header */}
       <div className="bg-[#1a3a5c] border border-[#d4af37]/30 rounded-t-xl px-5 py-3">
         <h3 className="text-[#d4af37] font-bold text-center text-sm tracking-widest uppercase">
-          {zone.nameEn}
+          {thai ? zone.nameTh : zone.nameEn}
         </h3>
       </div>
 
@@ -16,8 +18,8 @@ export default function PriceZoneTable({ zone }: { zone: ZoneWithRoutes }) {
       <div className="border border-[#d4af37]/20 border-t-0 rounded-b-xl overflow-hidden">
         {/* Header */}
         <div className="grid grid-cols-5 bg-[#0f2040] text-white/60 text-xs font-medium">
-          <div className="col-span-1 px-3 py-2.5">From</div>
-          <div className="col-span-1 px-3 py-2.5">To</div>
+          <div className="col-span-1 px-3 py-2.5">{thai ? "จาก" : "From"}</div>
+          <div className="col-span-1 px-3 py-2.5">{thai ? "ถึง" : "To"}</div>
           <div className="px-3 py-2.5 text-center">
             🚗 Standard
             <br />
@@ -44,10 +46,10 @@ export default function PriceZoneTable({ zone }: { zone: ZoneWithRoutes }) {
             }`}
           >
             <div className="col-span-1 px-3 py-2.5 text-white/70">
-              {route.fromEn}
+              {thai ? route.fromTh : route.fromEn}
             </div>
             <div className="col-span-1 px-3 py-2.5 text-white/90 font-medium">
-              {route.toEn}
+              {thai ? route.toTh : route.toEn}
             </div>
             <div className="px-3 py-2.5 text-center text-white/80">
               {route.priceStandard.toLocaleString()}

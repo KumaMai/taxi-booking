@@ -1,120 +1,14 @@
 "use client";
-
 import { useState } from "react";
 import Link from "next/link";
 import { Menu, X } from "lucide-react";
+import type { PublicSettings } from "@/lib/settings";
+import type { Locale } from "@/lib/locale";
+import { COMMON_COPY, NAV_COPY, copy } from "@/lib/i18n";
+import LanguageToggle from "./LanguageToggle";
 
-const NAV_LINKS = [
-  { href: "/booking", label: "Booking" },
-  { href: "/price-list", label: "Price List" },
-  { href: "/travel", label: "Travel Recommendations" },
-  { href: "/qa", label: "Q&A" },
-  { href: "/reviews", label: "Reviews" },
-  { href: "/contact", label: "Contact Me" },
-  { href: "/about", label: "About Us" },
-];
-
-const SOCIAL = [
-  { href: "https://line.me/ti/p/~@timetaxikhaolak", label: "LINE" },
-  { href: "mailto:timetaxikhaolak@gmail.com", label: "✉" },
-  { href: "https://wa.me/66986822951", label: "WA" },
-];
-
-export default function Navbar() {
-  const [open, setOpen] = useState(false);
-
-  return (
-    <nav className="bg-[#0a1628] border-b border-[#d4af37]/20 sticky top-0 z-50">
-      <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between gap-4">
-        {/* Logo */}
-        <Link href="/" className="flex items-center gap-2 shrink-0">
-          <div className="w-11 h-11 rounded-full border-2 border-[#d4af37] flex items-center justify-center">
-            <span className="text-[#d4af37] font-bold text-xs leading-tight text-center">
-              TIME
-              <br />
-              TAXI
-            </span>
-          </div>
-          <span className="text-[#d4af37] font-bold text-xs leading-tight hidden sm:block">
-            TIME TAXI
-            <br />
-            <span className="text-white/60 font-normal">KHAOLAK</span>
-          </span>
-        </Link>
-
-        {/* Desktop Nav Links */}
-        <div className="hidden lg:flex items-center gap-0.5">
-          {NAV_LINKS.map((l) => (
-            <Link
-              key={l.href}
-              href={l.href}
-              className="text-white/75 hover:text-[#d4af37] text-xs px-2.5 py-1.5 rounded transition-colors whitespace-nowrap"
-            >
-              {l.label}
-            </Link>
-          ))}
-        </div>
-
-        {/* Social Icons + Language */}
-        <div className="hidden md:flex items-center gap-3 shrink-0">
-          {SOCIAL.map((s) => (
-            <a
-              key={s.label}
-              href={s.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-8 h-8 rounded-full bg-[#0f2040] border border-white/10 flex items-center justify-center text-white/60 hover:text-[#d4af37] hover:border-[#d4af37]/40 text-xs transition-colors"
-            >
-              {s.label}
-            </a>
-          ))}
-          <div className="flex items-center gap-1">
-            <button className="text-xs text-[#d4af37] font-medium">TH</button>
-            <span className="text-white/30 text-xs">/</span>
-            <button className="text-xs text-white/50 hover:text-white/80">
-              EN
-            </button>
-          </div>
-        </div>
-
-        {/* Mobile Toggle */}
-        <button
-          onClick={() => setOpen(!open)}
-          className="lg:hidden text-white/80 hover:text-[#d4af37] transition-colors"
-          aria-label="Toggle menu"
-        >
-          {open ? <X size={22} /> : <Menu size={22} />}
-        </button>
-      </div>
-
-      {/* Mobile Menu */}
-      {open && (
-        <div className="lg:hidden bg-[#0f2040] border-t border-[#d4af37]/20">
-          {NAV_LINKS.map((l) => (
-            <Link
-              key={l.href}
-              href={l.href}
-              onClick={() => setOpen(false)}
-              className="block px-5 py-3 text-white/75 hover:text-[#d4af37] hover:bg-[#1a3a5c]/40 border-b border-white/5 text-sm transition-colors"
-            >
-              {l.label}
-            </Link>
-          ))}
-          <div className="flex items-center gap-4 px-5 py-3">
-            {SOCIAL.map((s) => (
-              <a
-                key={s.label}
-                href={s.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-white/50 hover:text-[#d4af37] text-sm"
-              >
-                {s.label}
-              </a>
-            ))}
-          </div>
-        </div>
-      )}
-    </nav>
-  );
+export default function Navbar({ settings, locale = "en" }: { settings: PublicSettings; locale?: Locale }) {
+  const [open, setOpen] = useState(false); const [currentLocale, setCurrentLocale] = useState<Locale>(locale);
+  const social = [{ href: `https://line.me/ti/p/~${encodeURIComponent(settings.lineId)}`, label: "LINE" }, { href: `mailto:${settings.email}`, label: "✉" }, { href: `https://wa.me/${settings.whatsapp.replace(/[^0-9]/g, "")}`, label: "WA" }];
+  return <nav className="sticky top-0 z-50 border-b border-[#f3eadb]/10 bg-[#0b2a2f]/95 backdrop-blur-md"><div className="mx-auto flex h-[76px] max-w-7xl items-center justify-between gap-4 px-5 lg:px-8"><Link href="/" className="flex shrink-0 items-center gap-3"><div className="flex h-11 w-11 items-center justify-center rounded-full border border-[#e46d52]"><span className="text-center text-[9px] font-semibold leading-tight tracking-[0.16em] text-[#f3eadb]">TIME<br />TAXI</span></div><span className="hidden text-[11px] font-semibold uppercase tracking-[0.2em] text-[#f3eadb] sm:block">Time Taxi <span className="text-[#e46d52]">Khao Lak</span></span></Link><div className="hidden items-center gap-1 lg:flex">{NAV_COPY.map((item) => <Link key={item.href} href={item.href} className="whitespace-nowrap rounded-full px-3 py-2 text-[11px] font-medium uppercase tracking-[0.08em] text-[#d9cbb8] hover:bg-[#f3eadb]/10 hover:text-[#f3eadb]">{copy(currentLocale, item)}</Link>)}</div><div className="hidden shrink-0 items-center gap-3 md:flex">{social.map((item) => <a key={item.label} href={item.href} target="_blank" rel="noopener noreferrer" className="flex h-8 w-8 items-center justify-center rounded-full border border-[#f3eadb]/15 bg-[#102326] text-[10px] font-semibold text-[#d9cbb8]">{item.label}</a>)}<LanguageToggle locale={currentLocale} onChange={setCurrentLocale} /><Link href="/booking" className="rounded-full bg-[#e46d52] px-4 py-2.5 text-[11px] font-bold uppercase tracking-[0.12em] text-[#102326]">{copy(currentLocale, COMMON_COPY.bookRide)}</Link></div><button onClick={() => setOpen(!open)} className="rounded-full border border-[#f3eadb]/15 p-2 text-[#f3eadb] lg:hidden" aria-label={copy(currentLocale, COMMON_COPY.toggleMenu)}>{open ? <X size={22} /> : <Menu size={22} />}</button></div>{open && <div className="border-t border-[#f3eadb]/10 bg-[#102326] lg:hidden">{NAV_COPY.map((item) => <Link key={item.href} href={item.href} onClick={() => setOpen(false)} className="block border-b border-[#f3eadb]/10 px-5 py-3.5 text-sm text-[#d9cbb8]">{copy(currentLocale, item)}</Link>)}<div className="flex items-center gap-4 px-5 py-4">{social.map((item) => <a key={item.label} href={item.href} className="text-sm text-[#d9cbb8]">{item.label}</a>)}<Link href="/booking" onClick={() => setOpen(false)} className="ml-auto rounded-full bg-[#e46d52] px-4 py-2 text-xs font-bold text-[#102326]">{copy(currentLocale, COMMON_COPY.bookRide)}</Link></div></div>}</nav>;
 }
