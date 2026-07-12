@@ -73,7 +73,7 @@ packages:
 
 ```text
 Build Command:
-pnpm prisma generate && pnpm build
+pnpm build
 ```
 
 ```text
@@ -85,6 +85,8 @@ pnpm start
 Pre-deploy Command:
 pnpm exec prisma migrate deploy
 ```
+
+The repository build script already runs `prisma generate` before `next build`, so a clean Railway builder can generate Prisma Client before Next.js type-checks `prisma/seed.ts`.
 
 Pre-deploy command ต้องสำเร็จก่อน service จะเริ่มทำงาน
 
