@@ -274,6 +274,10 @@ pnpm prisma generate && pnpm build
 
 ตรวจ `DATABASE_URL`, PostgreSQL service status และ migration log
 
+### Build ได้ `ECONNREFUSED` จาก Prisma ระหว่าง prerender
+
+Public routes are configured for request-time rendering, so a build should not need to read booking content from PostgreSQL. If the error appears, first verify that the Railway app has a reference variable to the Railway PostgreSQL service (not a local `localhost` URL), and that the database service is healthy. The app also defers the public route tree to request time with Next.js `connection()`.
+
 ### Login เด้งกลับหน้าเดิม
 
 ตรวจว่า `NEXTAUTH_URL`, `AUTH_URL` และ `NEXT_PUBLIC_SITE_URL` เป็น HTTPS domain เดียวกัน

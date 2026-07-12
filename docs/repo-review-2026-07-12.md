@@ -105,3 +105,4 @@ Fix-then-ship: the core application and Admin workflows are verified; production
 - Diagnosed Railway build failure: GitHub snapshot was older than the local workspace and lacked `packages: ["."]` in `pnpm-workspace.yaml`; added a staging guide warning to commit/push before deploying.
 - Fixed clean-builder Prisma generation by changing the repository `build` script to run `prisma generate` before `next build`.
 - Verified `origin/main` contains matching Upstash specifiers in both `package.json` and `pnpm-lock.yaml`; added `packageManager: pnpm@9.15.9` as a Railway cache/version consistency guard and documented source-branch/cache verification.
+- Traced Railway's next failure to Prisma `ECONNREFUSED` during public-page prerender; public layout now calls Next.js `connection()` before settings/database reads, and the staging guide documents verifying the Railway PostgreSQL reference variable.
