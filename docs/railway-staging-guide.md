@@ -113,6 +113,7 @@ Pre-deploy command ต้องสำเร็จก่อน service จะเ�
 
 ```text
 NEXTAUTH_SECRET=<สุ่มค่าใหม่สำหรับ staging ยาวอย่างน้อย 32 ตัวอักษร>
+AUTH_SECRET=<ใช้ค่าเดียวกับ NEXTAUTH_SECRET หรือสร้างค่าใหม่ยาวอย่างน้อย 32 ตัวอักษร>
 NEXTAUTH_URL=https://<railway-domain>
 AUTH_URL=https://<railway-domain>
 AUTH_TRUST_HOST=true
@@ -273,6 +274,12 @@ pnpm prisma generate && pnpm build
 ### `/api/health` ได้ 503
 
 ตรวจ `DATABASE_URL`, PostgreSQL service status และ migration log
+
+ใน Railway ต้องใช้ **Add Reference Variable** จาก PostgreSQL service ไม่ใช่ค่า `localhost` หรือค่าจาก `.env.local`
+
+### Auth.js ขึ้น `MissingSecret`
+
+เพิ่ม `AUTH_SECRET` (แนะนำ) หรือ `NEXTAUTH_SECRET` ใน App service Variables โดยต้องยาวอย่างน้อย 32 ตัวอักษร แล้ว redeploy
 
 ### Build ได้ `ECONNREFUSED` จาก Prisma ระหว่าง prerender
 
