@@ -109,3 +109,4 @@ Fix-then-ship: the core application and Admin workflows are verified; production
 - Traced runtime logs to two deployment configuration gaps: unreachable Railway `DATABASE_URL` and missing Auth.js secret; added `AUTH_SECRET`/`NEXTAUTH_SECRET` fallback and explicit staging checks.
 - Smoke-tested live Railway staging URL: `/api/health` and all public routes returned HTTP 200; Playwright verified EN home, Thai toggle, localized page titles, and no browser page errors. Admin mutation and real email delivery still require credentials/test submission.
 - Verified unauthenticated `/admin` redirects to `/admin/login`, booking wizard reaches Steps 2 and 3 with synthetic data, and invalid booking API payload returns 400 without creating a record.
+- Submitted one synthetic staging booking through `/api/booking`; received HTTP 200 and reference `cmrhx4qxe00040mnxmggfxxxq`. Admin notification status/email delivery still needs confirmation from the configured staging inbox.
