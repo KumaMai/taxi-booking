@@ -57,6 +57,18 @@ body {
   color: #b8962e !important;
 }
 
+.route-card [class*="text-[#f3eadb]"] {
+  color: #102326 !important;
+}
+
+.route-card [class*="text-[#d9cbb8]"] {
+  color: rgb(16 35 38 / 0.58) !important;
+}
+
+.route-card [class*="border-[#f3eadb]"] {
+  border-color: rgb(16 35 38 / 0.12) !important;
+}
+
 h1,
 h2,
 h3,
