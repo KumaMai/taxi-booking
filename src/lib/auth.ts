@@ -27,18 +27,36 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) return null;
 
-        const admin = await db.adminUser.findUnique({
-          where: { email: credentials.email as string },
+        const email = credentials.email as string;
+        const password = credentials.password as string;
+        let admin = await db.adminUser.findUnique({
+          where: { email },
         });
 
-        if (!admin) return null;
+        let isValid = admin
+          ? await bcrypt.compare(password, admin.passwordHash)
+          : false;
 
-        const isValid = await bcrypt.compare(
-          credentials.password as string,
-          admin.passwordHash,
-        );
+        const isConfiguredAdmin =
+          email === process.env.ADMIN_EMAIL &&
+          password === process.env.ADMIN_PASSWORD;
 
-        if (!isValid) return null;
+        if (!isValid && isConfiguredAdmin) {
+          const passwordHash = await bcrypt.hash(password, 12);
+          admin = await db.adminUser.upsert({
+            where: { email },
+            create: {
+              email,
+              passwordHash,
+              name: "Administrator",
+              role: "SUPER_ADMIN",
+            },
+            update: { passwordHash, role: "SUPER_ADMIN" },
+          });
+          isValid = true;
+        }
+
+        if (!admin || !isValid) return null;
 
         await db.adminUser.update({
           where: { adminUsersId: admin.adminUsersId },
