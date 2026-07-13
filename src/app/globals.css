@@ -69,6 +69,28 @@ body {
   border-color: rgb(16 35 38 / 0.12) !important;
 }
 
+/* Home vehicle cards keep the cream editorial palette, including the featured card. */
+main > section:nth-of-type(2) {
+  background: #fffdf8 !important;
+}
+
+main > section:nth-of-type(2) [class*="bg-[#0b2a2f]"] {
+  background: #fffaf0 !important;
+  color: #102326 !important;
+  border-color: rgb(184 150 46 / 0.55) !important;
+}
+
+main > section:nth-of-type(2) [class*="text-[#f3eadb]"],
+main > section:nth-of-type(2) [class*="text-[#d9cbb8]"] {
+  color: rgb(16 35 38 / 0.68) !important;
+}
+
+main > section:nth-of-type(2) [class*="bg-[#e46d52]"],
+main > section:nth-of-type(2) [class*="text-[#e46d52]"] {
+  background-color: #b8962e !important;
+  color: #fffdf8 !important;
+}
+
 h1,
 h2,
 h3,
