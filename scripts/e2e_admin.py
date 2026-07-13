@@ -15,7 +15,7 @@ with sync_playwright() as playwright:
     page.locator('input[type="email"]').fill(ADMIN_EMAIL)
     page.locator('input[type="password"]').fill(ADMIN_PASSWORD)
     page.locator('button[type="submit"]').click()
-    page.wait_for_url("**/admin", wait_until="networkidle")
+    page.wait_for_url("**/admin", wait_until="domcontentloaded")
     expect(page.get_by_role("heading", name="A clear view of the road ahead.")).to_be_visible()
 
     page.goto(f"{BASE_URL}/admin/bookings", wait_until="networkidle")

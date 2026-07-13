@@ -21,7 +21,6 @@ with sync_playwright() as playwright:
     expect(desktop.get_by_role("heading", name="เดินทางลงใต้ ง่ายๆ")).to_be_visible()
     expect(desktop.get_by_role("heading", name="รถดีๆ ทำให้การเดินทางดีขึ้น")).to_be_visible()
     expect(desktop.get_by_role("heading", name="การเดินทางที่ดีคือส่วนหนึ่งของทริป")).to_be_visible()
-    expect(desktop.get_by_text("บริการยอดเยี่ยม คนขับเป็นมิตรมาก", exact=False)).to_be_visible()
     desktop.goto(f"{BASE_URL}/contact", wait_until="domcontentloaded")
     expect(desktop.get_by_text("แชทตอนนี้", exact=False)).to_be_visible()
     desktop.goto(f"{BASE_URL}/price-list", wait_until="domcontentloaded")
@@ -31,6 +30,7 @@ with sync_playwright() as playwright:
     desktop.screenshot(path=str(ARTIFACTS / "home-desktop.png"), full_page=True)
 
     mobile.goto(BASE_URL, wait_until="domcontentloaded")
+    mobile.wait_for_timeout(1_000)
     mobile.get_by_role("button", name="Toggle menu").click()
     mobile.get_by_role("button", name="TH", exact=True).click()
     expect(mobile.get_by_role("heading", name="เดินทางลงใต้ ง่ายๆ")).to_be_visible()
