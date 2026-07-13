@@ -25,6 +25,16 @@ The wizard validated only a subset of fields before advancing. Invalid passenger
 
 Browser interaction coverage for `/` at mobile width and `/booking` was deliberately skipped: the configured Python environment does not have the `playwright` module. No synthetic booking was submitted, so no database record or email notification was generated.
 
+## Follow-up browser verification
+
+Playwright and Chromium were installed in the local test environment after this review. The production build passed the following checks on isolated local ports:
+
+- Desktop: English and Thai home content; `/contact`, `/price-list`, and `/reviews` in Thai; Auth.js session endpoint; invalid booking API request returns `400`.
+- Mobile: menu locale toggle to Thai and back to English; booking journey, contact, and review steps.
+- Admin: valid local admin login, dashboard, bookings, and audit-log routes.
+
+No synthetic booking was submitted, so this verification did not create customer-like data or send email.
+
 ## Environment notes
 
 The `pnpm` executable failed before running scripts with `fetch failed`; direct project-local executables were used for verification. Sandboxed Node worker processes also returned `spawn EPERM`, while the same test and build commands completed successfully when allowed to run outside the sandbox.

@@ -1,17 +1,20 @@
+import os
 from pathlib import Path
 
 from playwright.sync_api import expect, sync_playwright
 
-BASE_URL = "http://localhost:3000"
+BASE_URL = os.environ.get("BASE_URL", "http://localhost:3000")
 ARTIFACTS = Path("artifacts/e2e")
 ARTIFACTS.mkdir(parents=True, exist_ok=True)
 
 with sync_playwright() as playwright:
     browser = playwright.chromium.launch(headless=True)
-    desktop = browser.new_page(viewport={"width": 1440, "height": 900})
-    mobile = browser.new_page(viewport={"width": 375, "height": 812})
+    desktop_context = browser.new_context(viewport={"width": 1440, "height": 900})
+    mobile_context = browser.new_context(viewport={"width": 375, "height": 812})
+    desktop = desktop_context.new_page()
+    mobile = mobile_context.new_page()
 
-    desktop.goto(BASE_URL, wait_until="networkidle")
+    desktop.goto(BASE_URL, wait_until="domcontentloaded")
     expect(desktop.get_by_role("heading", name="Your easy way south.")).to_be_visible()
     desktop.get_by_role("button", name="TH").click()
     expect(desktop.get_by_role("link", name="จองรถ").first).to_be_visible()
@@ -19,15 +22,22 @@ with sync_playwright() as playwright:
     expect(desktop.get_by_role("heading", name="รถดีๆ ทำให้การเดินทางดีขึ้น")).to_be_visible()
     expect(desktop.get_by_role("heading", name="การเดินทางที่ดีคือส่วนหนึ่งของทริป")).to_be_visible()
     expect(desktop.get_by_text("บริการยอดเยี่ยม คนขับเป็นมิตรมาก", exact=False)).to_be_visible()
-    desktop.goto(f"{BASE_URL}/contact", wait_until="networkidle")
+    desktop.goto(f"{BASE_URL}/contact", wait_until="domcontentloaded")
     expect(desktop.get_by_text("แชทตอนนี้", exact=False)).to_be_visible()
-    desktop.goto(f"{BASE_URL}/price-list", wait_until="networkidle")
+    desktop.goto(f"{BASE_URL}/price-list", wait_until="domcontentloaded")
     expect(desktop.get_by_role("link", name="จองรถรับส่งตอนนี้")).to_be_visible()
-    desktop.goto(f"{BASE_URL}/reviews", wait_until="networkidle")
+    desktop.goto(f"{BASE_URL}/reviews", wait_until="domcontentloaded")
     expect(desktop.get_by_text("ได้รับความไว้วางใจจากนักเดินทางทั่วโลก", exact=False)).to_be_visible()
     desktop.screenshot(path=str(ARTIFACTS / "home-desktop.png"), full_page=True)
 
-    mobile.goto(f"{BASE_URL}/booking", wait_until="networkidle")
+    mobile.goto(BASE_URL, wait_until="domcontentloaded")
+    mobile.get_by_role("button", name="Toggle menu").click()
+    mobile.get_by_role("button", name="TH", exact=True).click()
+    expect(mobile.get_by_role("heading", name="เดินทางลงใต้ ง่ายๆ")).to_be_visible()
+    mobile.get_by_role("button", name="EN", exact=True).click()
+    expect(mobile.get_by_role("heading", name="Your easy way south.")).to_be_visible()
+
+    mobile.goto(f"{BASE_URL}/booking", wait_until="domcontentloaded")
     expect(mobile.get_by_role("heading", name="Book your private transfer.")).to_be_visible()
     expect(mobile.get_by_text("Step 1 / Journey")).to_be_visible()
     mobile.screenshot(path=str(ARTIFACTS / "booking-journey-mobile.png"), full_page=True)
@@ -49,4 +59,6 @@ with sync_playwright() as playwright:
     expect(desktop.request.get(f"{BASE_URL}/api/auth/session")).to_be_ok()
     invalid_booking = desktop.request.post(f"{BASE_URL}/api/booking", data={})
     assert invalid_booking.status == 400, invalid_booking.status
+    desktop_context.close()
+    mobile_context.close()
     browser.close()

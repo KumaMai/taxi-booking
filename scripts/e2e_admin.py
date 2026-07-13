@@ -2,7 +2,7 @@ import os
 
 from playwright.sync_api import expect, sync_playwright
 
-BASE_URL = "http://localhost:3000"
+BASE_URL = os.environ.get("BASE_URL", "http://localhost:3000")
 ADMIN_EMAIL = os.environ.get("ADMIN_EMAIL", "admin@example.com")
 ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD", "ci-admin-password")
 EXPECT_SUPER_ADMIN = os.environ.get("E2E_EXPECT_SUPER_ADMIN", "false").lower() == "true"
