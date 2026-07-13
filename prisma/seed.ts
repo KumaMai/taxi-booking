@@ -11,7 +11,9 @@ const adapter = new PrismaPg({
 const prisma = new PrismaClient({ adapter });
 
 async function main() {
-  if (process.env.NODE_ENV === "production") {
+  const safeContentBootstrap = process.env.SAFE_CONTENT_BOOTSTRAP === "true";
+
+  if (process.env.NODE_ENV === "production" && !safeContentBootstrap) {
     throw new Error("Destructive seed is disabled in production");
   }
 
@@ -20,8 +22,12 @@ async function main() {
   // ─── 1. PRICE ZONES + ROUTES (7 zones, 46 routes) ─────────
   console.log("📍 Seeding price zones...");
 
-  await prisma.priceRoute.deleteMany();
-  await prisma.priceZone.deleteMany();
+  if (!safeContentBootstrap) {
+    await prisma.priceRoute.deleteMany();
+    await prisma.priceZone.deleteMany();
+  }
+
+  if (!safeContentBootstrap || (await prisma.priceZone.count()) === 0) {
 
   // ── Zone 1: Phuket Airport (3 routes) ──
   await prisma.priceZone.create({
@@ -576,10 +582,13 @@ async function main() {
 
   console.log("✅ Created 7 price zones + 46 routes");
 
+  }
+
   // ─── 2. REVIEWS ───────────────────────────────────────────
   console.log("⭐ Seeding reviews...");
 
-  await prisma.review.deleteMany();
+  if (!safeContentBootstrap) await prisma.review.deleteMany();
+  if (!safeContentBootstrap || (await prisma.review.count()) === 0) {
   await prisma.review.createMany({
     data: [
       {
@@ -634,11 +643,16 @@ async function main() {
   });
   console.log("✅ Created 6 reviews");
 
+  }
+
   // ─── 3. FAQ CATEGORIES + FAQS ─────────────────────────────
   console.log("❓ Seeding FAQ categories + FAQs...");
 
-  await prisma.faq.deleteMany();
-  await prisma.faqCategory.deleteMany();
+  if (!safeContentBootstrap) {
+    await prisma.faq.deleteMany();
+    await prisma.faqCategory.deleteMany();
+  }
+  if (!safeContentBootstrap || (await prisma.faqCategory.count()) === 0) {
 
   const catBooking = await prisma.faqCategory.create({
     data: { nameEn: "Car Booking", nameTh: "การจองรถ", sortOrder: 1 },
@@ -750,10 +764,13 @@ async function main() {
   });
   console.log("✅ Created 4 FAQ categories + 8 FAQs");
 
+  }
+
   // ─── 4. ATTRACTIONS ───────────────────────────────────────
   console.log("🏝️ Seeding attractions...");
 
-  await prisma.attraction.deleteMany();
+  if (!safeContentBootstrap) await prisma.attraction.deleteMany();
+  if (!safeContentBootstrap || (await prisma.attraction.count()) === 0) {
   await prisma.attraction.createMany({
     data: [
       {
@@ -812,8 +829,15 @@ async function main() {
   });
   console.log("✅ Created 6 attractions");
 
+  }
+
   // ─── 5. ADMIN USER ────────────────────────────────────────
   console.log("👤 Seeding admin user...");
+
+  if (safeContentBootstrap) {
+    console.log("Skipping admin and settings during safe content bootstrap.");
+    return;
+  }
 
   await prisma.adminUser.deleteMany();
   const adminEmail = process.env.ADMIN_EMAIL;
