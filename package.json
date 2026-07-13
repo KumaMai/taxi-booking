@@ -9,6 +9,7 @@
     "start": "next start",
     "smoke": "node scripts/runtime-smoke.mjs",
     "check:production-env": "node scripts/check-production-env.mjs",
+    "bootstrap:admin": "tsx scripts/bootstrap-admin.ts",
     "lint": "eslint",
     "typecheck": "tsc --noEmit --incremental false",
     "test": "tsx --test src/**/*.test.ts"

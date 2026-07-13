@@ -8,6 +8,16 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   ...authConfig, // ← spread authConfig
   secret: process.env.AUTH_SECRET ?? process.env.NEXTAUTH_SECRET,
   trustHost: true,
+  callbacks: {
+    ...authConfig.callbacks,
+    session({ session, token }) {
+      if (session.user && token.sub) {
+        session.user.id = token.sub;
+      }
+
+      return session;
+    },
+  },
   providers: [
     Credentials({
       credentials: {

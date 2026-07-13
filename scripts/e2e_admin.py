@@ -11,18 +11,18 @@ with sync_playwright() as playwright:
     browser = playwright.chromium.launch(headless=True)
     page = browser.new_page(viewport={"width": 1440, "height": 900})
 
-    page.goto(f"{BASE_URL}/admin/login", wait_until="networkidle")
+    page.goto(f"{BASE_URL}/admin/login", wait_until="domcontentloaded")
     page.locator('input[type="email"]').fill(ADMIN_EMAIL)
     page.locator('input[type="password"]').fill(ADMIN_PASSWORD)
     page.locator('button[type="submit"]').click()
     page.wait_for_url("**/admin", wait_until="domcontentloaded")
     expect(page.get_by_role("heading", name="A clear view of the road ahead.")).to_be_visible()
 
-    page.goto(f"{BASE_URL}/admin/bookings", wait_until="networkidle")
+    page.goto(f"{BASE_URL}/admin/bookings", wait_until="domcontentloaded")
     expect(page.get_by_role("heading", name="Bookings")).to_be_visible()
     expect(page.get_by_text("Notify", exact=True)).to_be_visible()
 
-    page.goto(f"{BASE_URL}/admin/audit-logs", wait_until="networkidle")
+    page.goto(f"{BASE_URL}/admin/audit-logs", wait_until="domcontentloaded")
     if EXPECT_SUPER_ADMIN:
         expect(page.get_by_role("heading", name="Audit Logs")).to_be_visible()
 
