@@ -15,7 +15,7 @@ const FOOTER_LINKS = [
 export default function Footer({ settings: s, locale = "en" }: { settings: PublicSettings; locale?: Locale }) {
   const thai = locale === "th";
   return (
-    <footer className="mt-auto border-t border-[#f3eadb]/10 bg-[#102326]">
+    <footer className="site-footer mt-auto border-t border-[#102326]/10 bg-[#eadfce] text-[#102326]">
       <div className="mx-auto grid max-w-7xl grid-cols-1 gap-10 px-5 py-14 md:grid-cols-[1.1fr_.8fr_1fr] md:px-8">
         <div>
           <div className="mb-5 flex items-center gap-3"><div className="flex h-10 w-10 items-center justify-center rounded-full border border-[#e46d52]"><span className="text-center text-[8px] font-semibold leading-tight tracking-[0.12em] text-[#f3eadb]">TIME<br />TAXI</span></div><div><p className="text-sm font-semibold text-[#f3eadb]">Time Taxi Khao Lak</p><p className="text-xs text-[#d9cbb8]">{thai ? "บริการรถรับส่งสนามบินส่วนตัว" : "Private Airport Transfer Service"}</p></div></div>

@@ -12,7 +12,7 @@ export default async function PublicLayout({ children }: { children: ReactNode }
   const locale = await getLocale();
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#0a1628]">
+    <div className="min-h-screen flex flex-col bg-[#f7f1e5] text-[#102326]">
       <Navbar settings={settings} locale={locale} />
       <main className="flex-1">{children}</main>
       <Footer settings={settings} locale={locale} />

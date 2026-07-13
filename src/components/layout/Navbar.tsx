@@ -23,26 +23,26 @@ export default function Navbar({ settings, locale = "en" }: NavbarProps): React.
   ];
 
   return (
-    <nav className="sticky top-0 z-50 border-b border-[#f3eadb]/10 bg-[#0b2a2f]/95 backdrop-blur-md">
+    <nav className="sticky top-0 z-50 border-b border-[#102326]/10 bg-[#f7f1e5]/95 backdrop-blur-md">
       <div className="mx-auto flex h-[76px] max-w-7xl items-center justify-between gap-4 px-5 lg:px-8">
         <Link href="/" className="flex shrink-0 items-center gap-3">
-          <div className="flex h-11 w-11 items-center justify-center rounded-full border border-[#e46d52]"><span className="text-center text-[9px] font-semibold leading-tight tracking-[0.16em] text-[#f3eadb]">TIME<br />TAXI</span></div>
-          <span className="hidden text-[11px] font-semibold uppercase tracking-[0.2em] text-[#f3eadb] sm:block">Time Taxi <span className="text-[#e46d52]">Khao Lak</span></span>
+          <div className="flex h-11 w-11 items-center justify-center rounded-full border border-[#d4af37]"><span className="text-center text-[9px] font-semibold leading-tight tracking-[0.16em] text-[#102326]">TIME<br />TAXI</span></div>
+          <span className="hidden text-[11px] font-semibold uppercase tracking-[0.2em] text-[#102326] sm:block">Time Taxi <span className="text-[#b8962e]">Khao Lak</span></span>
         </Link>
-        <div className="hidden items-center gap-1 lg:flex">{NAV_COPY.map((item) => <Link key={item.href} href={item.href} className="whitespace-nowrap rounded-full px-3 py-2 text-[11px] font-medium uppercase tracking-[0.08em] text-[#d9cbb8] hover:bg-[#f3eadb]/10 hover:text-[#f3eadb]">{copy(currentLocale, item)}</Link>)}</div>
+        <div className="hidden items-center gap-1 lg:flex">{NAV_COPY.map((item) => <Link key={item.href} href={item.href} className="whitespace-nowrap rounded-full px-3 py-2 text-[11px] font-medium uppercase tracking-[0.08em] text-[#102326]/65 transition-colors hover:bg-[#eadfce] hover:text-[#102326]">{copy(currentLocale, item)}</Link>)}</div>
         <div className="hidden shrink-0 items-center gap-3 md:flex">
-          {social.map((item) => <a key={item.label} href={item.href} target="_blank" rel="noopener noreferrer" className="flex h-8 w-8 items-center justify-center rounded-full border border-[#f3eadb]/15 bg-[#102326] text-[10px] font-semibold text-[#d9cbb8]">{item.label}</a>)}
+          {social.map((item) => <a key={item.label} href={item.href} target="_blank" rel="noopener noreferrer" className="flex h-8 w-8 items-center justify-center rounded-full border border-[#102326]/15 bg-white text-[10px] font-semibold text-[#102326]/70">{item.label}</a>)}
           <LanguageToggle locale={currentLocale} onChange={setCurrentLocale} />
-          <Link href="/booking" className="rounded-full bg-[#e46d52] px-4 py-2.5 text-[11px] font-bold uppercase tracking-[0.12em] text-[#102326]">{copy(currentLocale, COMMON_COPY.bookRide)}</Link>
+          <Link href="/booking" className="rounded-full bg-[#d4af37] px-4 py-2.5 text-[11px] font-bold uppercase tracking-[0.12em] text-[#020b18] transition-colors hover:bg-[#f4c430]">{copy(currentLocale, COMMON_COPY.bookRide)}</Link>
         </div>
-        <button type="button" onClick={() => setOpen(!open)} className="rounded-full border border-[#f3eadb]/15 p-2 text-[#f3eadb] lg:hidden" aria-label={copy(currentLocale, COMMON_COPY.toggleMenu)}>{open ? <X size={22} /> : <Menu size={22} />}</button>
+        <button type="button" onClick={() => setOpen(!open)} className="rounded-full border border-[#102326]/15 p-2 text-[#102326] lg:hidden" aria-label={copy(currentLocale, COMMON_COPY.toggleMenu)}>{open ? <X size={22} /> : <Menu size={22} />}</button>
       </div>
-      {open && <div className="border-t border-[#f3eadb]/10 bg-[#102326] lg:hidden">
-        {NAV_COPY.map((item) => <Link key={item.href} href={item.href} onClick={() => setOpen(false)} className="block border-b border-[#f3eadb]/10 px-5 py-3.5 text-sm text-[#d9cbb8]">{copy(currentLocale, item)}</Link>)}
+      {open && <div className="border-t border-[#102326]/10 bg-[#f7f1e5] lg:hidden">
+        {NAV_COPY.map((item) => <Link key={item.href} href={item.href} onClick={() => setOpen(false)} className="block border-b border-[#102326]/10 px-5 py-3.5 text-sm text-[#102326]/75">{copy(currentLocale, item)}</Link>)}
         <div className="flex items-center gap-4 px-5 py-4">
-          {social.map((item) => <a key={item.label} href={item.href} className="text-sm text-[#d9cbb8]">{item.label}</a>)}
+          {social.map((item) => <a key={item.label} href={item.href} className="text-sm text-[#102326]/70">{item.label}</a>)}
           <LanguageToggle locale={currentLocale} onChange={setCurrentLocale} />
-          <Link href="/booking" onClick={() => setOpen(false)} className="ml-auto rounded-full bg-[#e46d52] px-4 py-2 text-xs font-bold text-[#102326]">{copy(currentLocale, COMMON_COPY.bookRide)}</Link>
+          <Link href="/booking" onClick={() => setOpen(false)} className="ml-auto rounded-full bg-[#d4af37] px-4 py-2 text-xs font-bold text-[#020b18]">{copy(currentLocale, COMMON_COPY.bookRide)}</Link>
         </div>
       </div>}
     </nav>
