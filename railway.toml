@@ -1,2 +1,2 @@
 [deploy]
-preDeployCommand = ["pnpm exec prisma migrate deploy", "pnpm run bootstrap:admin"]
+preDeployCommand = ["pnpm exec prisma migrate deploy && pnpm run bootstrap:admin"]
